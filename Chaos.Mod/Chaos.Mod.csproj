@@ -1,0 +1,70 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="assets\chaosmod\sounds\effects\obliterate.ogg" />
+		<None Remove="assets\chaosmod\sounds\explosion-short.ogg" />
+		<None Remove="assets\chaosmod\lang\en.json" />
+		<None Remove="modinfo.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="assets\chaosmod\lang\en.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="assets\chaosmod\sounds\effects\obliterate.ogg">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="modinfo.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="SA_Release.saproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\VintageMods\VintageMods.Core\VintageMods.Core.csproj" />
+		<ProjectReference Include="..\Chaos.Engine\Chaos.Engine.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="protobuf-net">
+			<HintPath>D:\Games\Vintage Story\Lib\protobuf-net.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="VintagestoryAPI">
+			<HintPath>D:\Games\Vintage Story\VintagestoryAPI.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="VintagestoryLib">
+			<HintPath>D:\Games\Vintage Story\VintagestoryLib.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="VSEssentials">
+		  <HintPath>D:\Games\Vintage Story\Mods\VSEssentials.dll</HintPath>
+		  <Private>false</Private>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="System.Memory" Version="4.5.4" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="assets\chaosmod\lang\en.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Resource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+	</ItemGroup>
+
+</Project>

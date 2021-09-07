@@ -1,0 +1,14 @@
+{
+  // ====================================================
+  //  Meta
+  // ====================================================
+
+  "Meta.ModTitle":  "Chaos Mod VS",  
+
+  // ====================================================
+  //  Effects
+  // ====================================================
+
+  "Effects.Creature.ObliterateAllNearbyCreatures.Title": "Obliterate All Nearby Creatures",
+  "Effects.Creature.ObliterateAllNearbyCreatures.Description": "All animals within 25 blocks of the player explode in a fiery ball of death."
+}

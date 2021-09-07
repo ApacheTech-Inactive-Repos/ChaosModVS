@@ -1,0 +1,72 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chaos.Tools.GameLauncher", "Chaos.Tools.GameLauncher\Chaos.Tools.GameLauncher.csproj", "{20D779AE-91A3-4205-990E-089F62CF64A7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BF513C71-CBA3-47D7-A787-F30FB6AA50A7} = {BF513C71-CBA3-47D7-A787-F30FB6AA50A7}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{2C19B349-5017-4E67-862F-FB485B1E33CB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{F2DA2961-990F-4E4C-BC7D-921CE7917225}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mods", "Mods", "{2576B65A-AFF2-4E55-A93D-216D9E779EC8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VintageMods.Core", "..\VintageMods\VintageMods.Core\VintageMods.Core.csproj", "{FDAD896C-3965-4786-9061-609EE750E426}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VintageMods.Core.MemoryAdaptor", "..\VintageMods\VintageMods.Core.MemoryAdaptor\VintageMods.Core.MemoryAdaptor.csproj", "{23810C45-4036-49E2-8DF1-D682CE55DDFF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{912DA490-1987-4991-B7D9-A83EA4D104E6}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		LICENCE.md = LICENCE.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chaos.Engine", "Chaos.Engine\Chaos.Engine.csproj", "{509C83CD-15BE-405A-8CAF-278C1E3F3644}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chaos.Mod", "Chaos.Mod\Chaos.Mod.csproj", "{BF513C71-CBA3-47D7-A787-F30FB6AA50A7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{20D779AE-91A3-4205-990E-089F62CF64A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20D779AE-91A3-4205-990E-089F62CF64A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20D779AE-91A3-4205-990E-089F62CF64A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20D779AE-91A3-4205-990E-089F62CF64A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDAD896C-3965-4786-9061-609EE750E426}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDAD896C-3965-4786-9061-609EE750E426}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDAD896C-3965-4786-9061-609EE750E426}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDAD896C-3965-4786-9061-609EE750E426}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23810C45-4036-49E2-8DF1-D682CE55DDFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23810C45-4036-49E2-8DF1-D682CE55DDFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23810C45-4036-49E2-8DF1-D682CE55DDFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23810C45-4036-49E2-8DF1-D682CE55DDFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{509C83CD-15BE-405A-8CAF-278C1E3F3644}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{509C83CD-15BE-405A-8CAF-278C1E3F3644}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{509C83CD-15BE-405A-8CAF-278C1E3F3644}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{509C83CD-15BE-405A-8CAF-278C1E3F3644}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF513C71-CBA3-47D7-A787-F30FB6AA50A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF513C71-CBA3-47D7-A787-F30FB6AA50A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF513C71-CBA3-47D7-A787-F30FB6AA50A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF513C71-CBA3-47D7-A787-F30FB6AA50A7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{20D779AE-91A3-4205-990E-089F62CF64A7} = {2C19B349-5017-4E67-862F-FB485B1E33CB}
+		{FDAD896C-3965-4786-9061-609EE750E426} = {F2DA2961-990F-4E4C-BC7D-921CE7917225}
+		{23810C45-4036-49E2-8DF1-D682CE55DDFF} = {F2DA2961-990F-4E4C-BC7D-921CE7917225}
+		{509C83CD-15BE-405A-8CAF-278C1E3F3644} = {F2DA2961-990F-4E4C-BC7D-921CE7917225}
+		{BF513C71-CBA3-47D7-A787-F30FB6AA50A7} = {2576B65A-AFF2-4E55-A93D-216D9E779EC8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F236E4EF-9B9D-49A8-BC47-BFE4E599E1D4}
+	EndGlobalSection
+EndGlobal

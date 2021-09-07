@@ -1,0 +1,12 @@
+﻿{
+  "type": "Code",
+  "name": "ChaosModVS",
+  "side": "Universal",
+  "modid": "chaosmod",
+  "description": "Crazy, crazy goings-on.",
+  "authors": [ "Apache" ],
+  "version": "0.1.0",
+  "dependencies": {
+    "game": "1.15.5"
+  }
+}
