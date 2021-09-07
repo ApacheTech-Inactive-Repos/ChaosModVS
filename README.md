@@ -10,7 +10,7 @@ This makes gameplay significantly more surprising, as literally anything could h
 
 The mod also comes with a simple configuration tool. You can do anything from changing how often an effect should start to toggling individual effects and changing all kind of settings individually for any effect.
 
-Also this mod is open source and licensed with GPLv3. Feel free to do whatever you want with it as long as it doesn't violate the license in any way and you credit me accordingly.
+Also this mod is open source. Feel free to do whatever you want with it as long as it doesn't violate the license in any way and you credit me accordingly.
 
 **Please note: Some mods can conflict with some effects! If you are experiencing any problems try disabling all other mods before reporting them back!**
 
