@@ -10,13 +10,13 @@ using Vintagestory.API.Server;
 namespace Chaos.Mod.Effects.Creatures
 {
     [ChaosEffect(
-        Id = "Creature.ObliterateAllNearbyCreatures",
+        Id = "Creature.ObliterateAllNearbyAnimals",
         ExecutionType = ExecutionType.Creature,
         Duration = EffectDuration.Instant)]
-    public class EffectCreatureObliterateAllNearbyCreatures : ChaosEffect
+    public class EffectCreatureObliterateAllNearbyAnimals : ChaosEffect
     {
         [ImportingConstructor]
-        public EffectCreatureObliterateAllNearbyCreatures(ICoreAPI api) : base(api) { }
+        public EffectCreatureObliterateAllNearbyAnimals(ICoreAPI api) : base(api) { }
         
         public override void OnServerStart(IServerPlayer player, ICoreServerAPI sapi)
         {

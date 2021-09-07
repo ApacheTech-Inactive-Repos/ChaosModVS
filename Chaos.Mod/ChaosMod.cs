@@ -17,22 +17,22 @@ namespace Chaos.Mod
     internal class ChaosMod : UniversalModSystem
     {
         private IChaosAPI _chaosApi;
-        private EffectsController _effects;
+        public EffectsController Effects { get; private set; }
 
-        public ChaosMod() : base("chaosmod")
-        {
-        }
+        public ChaosMod() : base("chaosmod"){}
 
-        public override double ExecuteOrder()
-        {
-            return 0.0;
-        }
+        public override double ExecuteOrder() => 0.0;
 
         public override void Start(ICoreAPI api)
         {
             base.Start(api);
             _chaosApi = new ChaosAPI(Api);
-            _effects = new EffectsController(Api);
+            
+            Effects = new EffectsController(Api)
+            {
+                ClientNetworkChannel = ClientNetworkChannel,
+                ServerNetworkChannel = ServerNetworkChannel
+            };
         }
 
         public override void StartClientSide(ICoreClientAPI capi)
@@ -53,17 +53,17 @@ namespace Chaos.Mod
             Capi.Input.RegisterHotKey("chaos-boom", "Boom!", GlKeys.ControlRight);
             Capi.Input.SetHotKeyHandler("chaos-boom", _ =>
             {
-                const string id = "Creature.ObliterateAllNearbyCreatures";
-                _effects.Execute(id, ClientNetworkChannel);
+                Effects.Start("Creature.ObliterateAllNearbyCreatures");
                 return true;
             });
         }
+
 
         public override void StartServerSide(ICoreServerAPI sapi)
         {
             ServerNetworkChannel
                 .RegisterMessageType<HandleEffectPacket>()
-                .SetMessageHandler<HandleEffectPacket>(_effects.HandleEffect);
+                .SetMessageHandler<HandleEffectPacket>(Effects.HandleEffect);
         }
     }
 }

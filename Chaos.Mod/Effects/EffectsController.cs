@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using System.IO;
 using System.Linq;
 using Chaos.Engine.Contracts;
 using Chaos.Engine.Network.Messages;
-using Chaos.Mod.Effects.Creatures;
 using Chaos.Mod.Extensions;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 using Vintagestory.API.Server;
 
 namespace Chaos.Mod.Effects
 {
+    // HACK: This class is currently tightly coupled to the ModSystem. Further refactoring must be done.
+
     public class EffectsController
     {
         [Export]
@@ -21,34 +24,34 @@ namespace Chaos.Mod.Effects
         [ImportMany("ChaosEffects", typeof(IChaosEffect), AllowRecomposition = true)]
         private IEnumerable<Lazy<IChaosEffect, IChaosEffectMetadata>> Effects { get; set; }
 
+        public IClientNetworkChannel ClientNetworkChannel { get; set; }
+        public IServerNetworkChannel ServerNetworkChannel { get; set; }
+
         public EffectsController(ICoreAPI api)
         {
             Api = api;
 
-            var cat = new AssemblyCatalog(typeof(EffectCreatureObliterateAllNearbyCreatures).Assembly);
+            var cat = new AggregateCatalog();
+            cat.Catalogs.Add(new AssemblyCatalog(GetType().Assembly));
+
+            // HACK: Added a Directory Catalogue, in preparation for separate Effects libraries.
+
+            //? A lot of this will need to be refactored out, and handled globally, by the ChaosAPI.
+            //? Maybe, even extending the FileManager class to handle watched Directories as well.
+
+            var packPath = Path.Combine(GamePaths.DataPath, "ChaosMod", "Packs");
+            Directory.CreateDirectory(packPath);
+            cat.Catalogs.Add(new DirectoryCatalog(packPath));
+            
             new CompositionContainer(cat).ComposeParts(this);
         }
 
-        private IChaosEffect GetEffect(string id)
-        {
-            try
-            {
-                //return Effects.First();
-                return Effects.First(p => p.Metadata.Id == id).Value;
-            }
-            catch (ArgumentNullException)
-            {
-                Api.World.Logger.Error($"Chaos Effect not found: { id }");
-                throw;
-            }
-        }
-
-        public void Execute(string id, IClientNetworkChannel channel)
+        public void Start(string id)
         {
             var lazyEffect = Effects.FirstOrDefault(p => p.Metadata.Id == id);
             if (lazyEffect is null) return;
             lazyEffect.Value.OnClientStart(Api as ICoreClientAPI);
-            channel.SendPacket(new HandleEffectPacket(id));
+            ClientNetworkChannel.SendPacket(new HandleEffectPacket(id));
         }
 
         public void HandleEffect(IServerPlayer player, HandleEffectPacket packet)
