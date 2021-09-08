@@ -12,3 +12,12 @@ Are there any other contenders, around the level of AutoMapper, that would work 
     AutoFac
     Microsoft Unity (not to be confused with Unity Game Engine)
     Ninject
+
+
+## Test Driven Development (TDD)
+
+Is it possible to set up a dummy rig, so that we can do TDD on the middleware aspects of the mod?
+
+How does TDD play with MEF? This is a million miles from FizzBuzz.
+
+## 

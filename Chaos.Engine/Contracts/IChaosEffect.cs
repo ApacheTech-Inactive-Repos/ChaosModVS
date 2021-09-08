@@ -9,7 +9,7 @@ namespace Chaos.Engine.Contracts
     ///     They are fire-and-forget, and require no callbacks each game tick.
     /// </summary>
     [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
-    public interface IChaosEffect
+    public interface IChaosEffect : IChaosEffectMetadata
     {
         /// <summary>
         ///     Gets a value indicating whether this effect is running.

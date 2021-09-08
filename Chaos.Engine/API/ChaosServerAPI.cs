@@ -1,6 +1,5 @@
 ﻿using Chaos.Engine.Contracts;
 using Chaos.Engine.Controllers;
-using Chaos.Engine.Primitives;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
 

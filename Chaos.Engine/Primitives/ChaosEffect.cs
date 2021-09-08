@@ -1,8 +1,8 @@
 ﻿using System;
-using System.ComponentModel.Composition;
+using System.Collections.Generic;
 using Chaos.Engine.API;
 using Chaos.Engine.Contracts;
-using JetBrains.Annotations;
+using Chaos.Engine.Enums;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
@@ -20,16 +20,23 @@ namespace Chaos.Engine.Primitives
     /// </remarks>
     /// <seealso cref="IChaosEffect" />
     /// <seealso cref="IDisposable" />
-    public abstract class ChaosEffect : IChaosEffect, IDisposable
+    public abstract class ChaosEffect<TSettingsFile> : IChaosEffect, IDisposable where TSettingsFile : ChaosEffectSettings, new()
     {
         /// <summary>
-        ///     Initialises a new instance of the <see cref="ChaosEffect"/> class.
+        ///     Gets the settings file for the effect.
+        /// </summary>
+        /// <value>The settings file.</value>
+        protected TSettingsFile Settings { get; }
+        
+        /// <summary>
+        ///     Initialises a new instance of the <see cref="ChaosEffect{TSettingsFile}"/> class.
         /// </summary>
         /// <param name="api">The core Chaos Engine API.</param>
-        protected ChaosEffect(ICoreAPI api)
+        /// <param name="id">A slug used to identify this effect to the engine, and to other effects in may be incompatible with.</param>
+        protected ChaosEffect(ICoreAPI api, string id)
         {
-            Api = api;
-            ChaosApi = new ChaosAPI(Api);
+            ChaosApi = new ChaosAPI(Api = api);
+            Settings = ChaosEffectSettings.Load<TSettingsFile>(api, Id = id);
         }
 
         /// <summary>
@@ -129,13 +136,48 @@ namespace Chaos.Engine.Primitives
         }
 
         /// <summary>
-        ///     Finalises an instance of the <see cref="ChaosEffect"/> class.
+        ///     Finalises an instance of the <see cref="ChaosEffect{TSettingsFile}"/> class.
         /// </summary>
         ~ChaosEffect()
         {
             Dispose(false);
         }
 
+        #endregion
+
+
+        #region Implementation of IChaosEffectMetadata.
+
+        /// <summary>
+        ///     Gets or sets the effect identifier.
+        /// </summary>
+        /// <value>A slug used to identify this effect to the engine, and to other effects in may be incompatible with.</value>
+        public string Id { get; private set; }
+
+        /// <summary>
+        ///     Gets or sets the execution type of the effect.
+        /// </summary>
+        /// <value>The execution type of the effect.</value>
+        public abstract ExecutionType ExecutionType { get; }
+
+        /// <summary>
+        ///     Gets or sets which package of Effects this particular effect belongs to.
+        /// </summary>
+        /// <value>The package of Effects this particular effect belongs to.</value>
+        public virtual string Pack => "Default";
+
+        /// <summary>
+        ///     Gets or sets the length of time an effect is active for.
+        /// </summary>
+        /// <value>The length of time an effect is active for.</value>
+        public virtual EffectDuration Duration => EffectDuration.Standard;
+
+        /// <summary>
+        ///     Gets or sets a list of effect ids that this effect is incompatible with. If one of these effects is already running,
+        ///     this effect will be removed from the pool until all incompatible effects have ended.
+        /// </summary>
+        /// <value>An array of strings, identifying effects that may interfere with this effect.</value>
+        public virtual IEnumerable<string> IncompatibleWith => new string[] { };
         #endregion
     }
 }

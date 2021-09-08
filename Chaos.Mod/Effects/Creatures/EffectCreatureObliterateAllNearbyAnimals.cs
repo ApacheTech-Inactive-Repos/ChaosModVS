@@ -4,19 +4,20 @@ using Chaos.Engine.Attributes;
 using Chaos.Engine.Enums;
 using Chaos.Engine.Network.Messages;
 using Chaos.Engine.Primitives;
+using VintageMods.Core.Extensions;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
 
 namespace Chaos.Mod.Effects.Creatures
 {
-    [ChaosEffect(
-        Id = "Creature.ObliterateAllNearbyAnimals",
-        ExecutionType = ExecutionType.Creature,
-        Duration = EffectDuration.Instant)]
-    public class EffectCreatureObliterateAllNearbyAnimals : ChaosEffect
+    [ChaosEffect]
+    public sealed class EffectCreatureObliterateAllNearbyAnimals : ChaosEffect<SettingsCreatureObliterateAllNearbyAnimals>
     {
+        public override ExecutionType ExecutionType => ExecutionType.Creature;
+        public override EffectDuration Duration => EffectDuration.Instant;
+
         [ImportingConstructor]
-        public EffectCreatureObliterateAllNearbyAnimals(ICoreAPI api) : base(api) { }
+        public EffectCreatureObliterateAllNearbyAnimals(ICoreAPI api) : base(api, "ObliterateAllNearbyAnimals") { }
         
         public override void OnServerStart(IServerPlayer player, ICoreServerAPI sapi)
         {

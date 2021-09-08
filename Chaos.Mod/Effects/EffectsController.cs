@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.IO;
 using System.Linq;
 using Chaos.Engine.Contracts;
+using Chaos.Engine.Extensions;
 using Chaos.Engine.Network.Messages;
-using Chaos.Mod.Extensions;
+using Chaos.Engine.Primitives;
+using VintageMods.Core.Extensions;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
@@ -16,20 +17,62 @@ namespace Chaos.Mod.Effects
 {
     // HACK: This class is currently tightly coupled to the ModSystem. Further refactoring must be done.
 
-    public class EffectsController
+    public class EffectsController : ControllerBase<EffectsController.ServerSide, EffectsController.ClientSide>
     {
+        private new static ICoreAPI Api { get; set; }
+
         [Export]
-        private ICoreAPI Api { get; }
+        private ICoreAPI ExportableCoreAPI { get; set; }
 
         [ImportMany("ChaosEffects", typeof(IChaosEffect), AllowRecomposition = true)]
-        private IEnumerable<Lazy<IChaosEffect, IChaosEffectMetadata>> Effects { get; set; }
+        private IEnumerable<IChaosEffect> EffectImports { get; set; }
 
-        public IClientNetworkChannel ClientNetworkChannel { get; set; }
-        public IServerNetworkChannel ServerNetworkChannel { get; set; }
+        private static IEnumerable<IChaosEffect> Effects { get; set; }
 
-        public EffectsController(ICoreAPI api)
+        private static IClientNetworkChannel ClientNetworkChannel { get; set; }
+        private static IServerNetworkChannel ServerNetworkChannel { get; set; }
+
+
+        public class ClientSide
         {
-            Api = api;
+            public void Initialise(IClientNetworkChannel channel)
+            {
+                ClientNetworkChannel = channel.RegisterMessageType<HandleEffectPacket>();
+            }
+
+            public void StartExecute(string id)
+            {
+                var effect = Effects.FirstOrDefault(p => p.Id == id);
+                if (effect is null) return;
+                    effect.OnClientStart(Api as ICoreClientAPI);
+                ClientNetworkChannel.SendPacket(new HandleEffectPacket(id));
+            }
+
+        }
+
+        public class ServerSide
+        {
+            public void Initialise(IServerNetworkChannel channel)
+            {
+                ServerNetworkChannel = channel
+                    .RegisterMessageType<HandleEffectPacket>()
+                    .SetMessageHandler<HandleEffectPacket>(StartExecute);
+            }
+
+            public void StartExecute(IServerPlayer player, HandleEffectPacket packet)
+            {
+                var effect = Effects.FirstOrDefault(p => p.Id == packet.EffectId);
+                if (effect is null) return;
+                effect.OnServerStart(player, Api as ICoreServerAPI);
+                player.SendMessage(effect.Title());
+                player.SendMessage(effect.Description());
+            }
+
+        }
+
+        public EffectsController(ICoreAPI api) : base(api)
+        {
+            Api ??= ExportableCoreAPI ??= api;
 
             var cat = new AggregateCatalog();
             cat.Catalogs.Add(new AssemblyCatalog(GetType().Assembly));
@@ -44,23 +87,7 @@ namespace Chaos.Mod.Effects
             cat.Catalogs.Add(new DirectoryCatalog(packPath));
             
             new CompositionContainer(cat).ComposeParts(this);
-        }
-
-        public void Start(string id)
-        {
-            var lazyEffect = Effects.FirstOrDefault(p => p.Metadata.Id == id);
-            if (lazyEffect is null) return;
-            lazyEffect.Value.OnClientStart(Api as ICoreClientAPI);
-            ClientNetworkChannel.SendPacket(new HandleEffectPacket(id));
-        }
-
-        public void HandleEffect(IServerPlayer player, HandleEffectPacket packet)
-        {
-            var lazyEffect = Effects.FirstOrDefault(p => p.Metadata.Id == packet.EffectId);
-            if (lazyEffect is null) return;
-            lazyEffect.Value.OnServerStart(player, Api as ICoreServerAPI);
-            player.SendMessage(ChaosLangEx.Effect(lazyEffect.Metadata, "Title"));
-            player.SendMessage(ChaosLangEx.Effect(lazyEffect.Metadata, "Description"));
+            Effects ??= EffectImports;
         }
     }
 }

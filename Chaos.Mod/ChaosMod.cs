@@ -1,11 +1,7 @@
-﻿using System.IO;
-using Chaos.Engine.API;
-using Chaos.Engine.Contracts;
-using Chaos.Engine.Network.Messages;
+﻿using Chaos.Engine.Systems;
 using Chaos.Mod.Effects;
 using VintageMods.Core.Attributes;
 using VintageMods.Core.ModSystems;
-using VintageMods.Core.Network.Messages;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
@@ -14,56 +10,47 @@ using Vintagestory.API.Server;
 
 namespace Chaos.Mod
 {
-    internal class ChaosMod : UniversalModSystem
+    internal class ChaosMod : UniversalInternalMod<ServerSystemChaosMod, ClientSystemChaosMod>
     {
-        private IChaosAPI _chaosApi;
+        public ChaosMod() : base("chaosmod")
+        {
+        }
+
         public EffectsController Effects { get; private set; }
 
-        public ChaosMod() : base("chaosmod"){}
+        public override double ExecuteOrder()
+        {
+            return 0.0;
+        }
 
-        public override double ExecuteOrder() => 0.0;
-
+        // Perform actions on both Server and Client.
         public override void Start(ICoreAPI api)
         {
             base.Start(api);
-            _chaosApi = new ChaosAPI(Api);
-            
-            Effects = new EffectsController(Api)
-            {
-                ClientNetworkChannel = ClientNetworkChannel,
-                ServerNetworkChannel = ServerNetworkChannel
-            };
+            Effects ??= new EffectsController(Api);
         }
 
+        // Perform actions on Client.
         public override void StartClientSide(ICoreClientAPI capi)
         {
-            ClientNetworkChannel
-                .RegisterMessageType<HandleEffectPacket>();
+            Effects.Client.Initialise(ClientChannel);
+            RegisterHotkeys();
+        }
 
-            Capi.Input.RegisterHotKey("mef", "MEF Packet Test", GlKeys.AltRight);
-            Capi.Input.SetHotKeyHandler("mef", _ =>
-            {
-                ClientNetworkChannel.SendPacket(new CompositionDataPacket
-                {
-                    Data = File.ReadAllBytes(@"C:\Users\Apache\source\repos\ChaosModVS\Chaos.PayloadTest\bin\Debug\netstandard2.0\Chaos.PayloadTest.dll")
-                });
-                return true;
-            });
+        // Perform actions on Server.
+        public override void StartServerSide(ICoreServerAPI sapi)
+        {
+            Effects.Server.Initialise(ServerChannel);
+        }
 
+        private void RegisterHotkeys()
+        {
             Capi.Input.RegisterHotKey("chaos-boom", "Boom!", GlKeys.ControlRight);
             Capi.Input.SetHotKeyHandler("chaos-boom", _ =>
             {
-                Effects.Start("Creature.ObliterateAllNearbyCreatures");
+                Effects.Client.StartExecute("ObliterateAllNearbyAnimals");
                 return true;
             });
-        }
-
-
-        public override void StartServerSide(ICoreServerAPI sapi)
-        {
-            ServerNetworkChannel
-                .RegisterMessageType<HandleEffectPacket>()
-                .SetMessageHandler<HandleEffectPacket>(Effects.HandleEffect);
         }
     }
 }
