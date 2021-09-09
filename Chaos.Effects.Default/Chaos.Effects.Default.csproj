@@ -1,0 +1,69 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<PreserveCompilationContext>false</PreserveCompilationContext>
+		<PreserveCompilationReferences>false</PreserveCompilationReferences>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+		<ErrorReport>prompt</ErrorReport>
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+		<WarningsAsErrors />
+		<DebugType>none</DebugType>
+		<DebugSymbols>false</DebugSymbols>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <OutputPath>C:\Users\Apache\source\repos\ChaosModVS\.effects</OutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="assets\chaosmod\config\effects\default\effect-settings.json" />
+		<None Remove="assets\chaosmod\lang\en.json" />
+		<None Remove="assets\chaosmod\sounds\effects\obliterate.ogg" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="assets\chaosmod\sounds\effects\obliterate.ogg" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="assets\chaosmod\config\effects\default\effect-settings.json" />
+		<EmbeddedResource Include="assets\chaosmod\lang\effects\default\en.json">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Blocks\" />
+		<Folder Include="Items\" />
+		<Folder Include="Meta\" />
+		<Folder Include="Player\" />
+		<Folder Include="Time\" />
+		<Folder Include="Weather\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\VintageMods\VintageMods.Core\VintageMods.Core.csproj">
+			<Private>false</Private>
+		</ProjectReference>
+		<ProjectReference Include="..\Chaos.Engine\Chaos.Engine.csproj">
+			<Private>false</Private>
+			<CopyLocalSatelliteAssemblies></CopyLocalSatelliteAssemblies>
+		</ProjectReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="Microsoft.CSharp">
+			<HintPath>..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\Microsoft.CSharp.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="VintagestoryAPI">
+			<HintPath>D:\Games\Vintage Story\VintagestoryAPI.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+	</ItemGroup>
+
+</Project>

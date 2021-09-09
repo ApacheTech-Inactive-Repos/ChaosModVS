@@ -7,17 +7,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="assets\chaosmod\sounds\effects\obliterate.ogg" />
-		<None Remove="assets\chaosmod\sounds\explosion-short.ogg" />
 		<None Remove="assets\chaosmod\lang\en.json" />
 		<None Remove="modinfo.json" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Content Include="assets\chaosmod\lang\en.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="assets\chaosmod\sounds\effects\obliterate.ogg">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 		<Content Include="modinfo.json">
@@ -80,15 +75,6 @@
 
 	<ItemGroup>
 	  <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Effects\Blocks\" />
-	  <Folder Include="Effects\Items\" />
-	  <Folder Include="Effects\Meta\" />
-	  <Folder Include="Effects\Player\" />
-	  <Folder Include="Effects\Time\" />
-	  <Folder Include="Effects\Weather\" />
 	</ItemGroup>
 
 </Project>

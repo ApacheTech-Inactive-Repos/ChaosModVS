@@ -16,7 +16,7 @@ namespace Chaos.Engine.Extensions
         /// <returns></returns>
         private static string Effect(IChaosEffectMetadata effect, string section)
         {
-            return Lang.Get($"chaosmod:Effects.{effect.ExecutionType}.{effect.Id}.{section}");
+            return Lang.Get($"chaosmod:Effects.{effect.Pack}.{effect.ExecutionType}.{effect.Id}.{section}");
         }
 
         /// <summary>

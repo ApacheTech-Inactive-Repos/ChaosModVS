@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using System.Dynamic;
 using System.Linq;
 using Chaos.Engine.Attributes;
 using Chaos.Engine.Enums;
@@ -8,16 +9,16 @@ using VintageMods.Core.Extensions;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
 
-namespace Chaos.Mod.Effects.Creatures
+namespace Chaos.Effects.Default.Creatures
 {
     [ChaosEffect]
-    public sealed class EffectCreatureObliterateAllNearbyAnimals : ChaosEffect<SettingsCreatureObliterateAllNearbyAnimals>
+    public sealed class ObliterateAllNearbyAnimals : ChaosEffect
     {
         public override ExecutionType ExecutionType => ExecutionType.Creature;
         public override EffectDuration Duration => EffectDuration.Instant;
 
         [ImportingConstructor]
-        public EffectCreatureObliterateAllNearbyAnimals(ICoreAPI api) : base(api, "ObliterateAllNearbyAnimals") { }
+        public ObliterateAllNearbyAnimals(ICoreAPI api) : base(api) { }
         
         public override void OnServerStart(IServerPlayer player, ICoreServerAPI sapi)
         {

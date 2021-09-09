@@ -19,6 +19,7 @@ VintageMods.Sandbox/*
 #Local Output Folders
 .mods/
 .releases/
+.effects/
 .gac/
 
 # Mono auto generated files

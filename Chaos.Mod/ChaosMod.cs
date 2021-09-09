@@ -1,5 +1,5 @@
 ﻿using Chaos.Engine.Systems;
-using Chaos.Mod.Effects;
+using Chaos.Mod.Controllers;
 using VintageMods.Core.Attributes;
 using VintageMods.Core.ModSystems;
 using Vintagestory.API.Client;

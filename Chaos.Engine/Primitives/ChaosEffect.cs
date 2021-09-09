@@ -20,57 +20,43 @@ namespace Chaos.Engine.Primitives
     /// </remarks>
     /// <seealso cref="IChaosEffect" />
     /// <seealso cref="IDisposable" />
-    public abstract class ChaosEffect<TSettingsFile> : IChaosEffect, IDisposable where TSettingsFile : ChaosEffectSettings, new()
+    public abstract class ChaosEffect : IChaosEffect, IDisposable
     {
         /// <summary>
-        ///     Gets the settings file for the effect.
-        /// </summary>
-        /// <value>The settings file.</value>
-        protected TSettingsFile Settings { get; }
-        
-        /// <summary>
-        ///     Initialises a new instance of the <see cref="ChaosEffect{TSettingsFile}"/> class.
+        ///     Initialises a new instance of the <see cref="ChaosEffect"/> class.
         /// </summary>
         /// <param name="api">The core Chaos Engine API.</param>
-        /// <param name="id">A slug used to identify this effect to the engine, and to other effects in may be incompatible with.</param>
-        protected ChaosEffect(ICoreAPI api, string id)
+        protected ChaosEffect(ICoreAPI api)
         {
+            Id = GetType().Name;
             ChaosApi = new ChaosAPI(Api = api);
-            Settings = ChaosEffectSettings.Load<TSettingsFile>(api, Id = id);
         }
 
         /// <summary>
         ///     Gets the chaos API.
         /// </summary>
         /// <value>The chaos API.</value>
-        protected IChaosAPI ChaosApi { get; private set; }
+        protected IChaosAPI ChaosApi { get; }
 
         /// <summary>
         ///     Gets the core Chaos Engine API.
         /// </summary>
         /// <value>The core Chaos Engine API.</value>
-        protected ICoreAPI Api { get; private set; }
+        protected ICoreAPI Api { get; }
 
         /// <summary>
         ///     Gets a value indicating whether this effect is running.
         /// </summary>
         /// <value><c>true</c> if running; otherwise, <c>false</c>.</value>
-        public bool Running { get; protected set; }
+        public bool Running { get; private set; }
+
+
+        #region Client Methods
 
         /// <summary>
         ///     Called when the effect is first run. Handles client-side responsibilities.
         /// </summary>
         public virtual void OnClientStart(ICoreClientAPI capi)
-        {
-            Running = true;
-        }
-
-        /// <summary>
-        ///     Called when the effect is first run. Handles server-side responsibilities.
-        /// </summary>
-        /// <param name="player">The player that made the request to the server.</param>
-        /// <param name="sapi">The server side core game API.</param>
-        public virtual void OnServerStart(IServerPlayer player, ICoreServerAPI sapi)
         {
             Running = true;
         }
@@ -85,6 +71,29 @@ namespace Chaos.Engine.Primitives
         }
 
         /// <summary>
+        ///     Called when the effect has ended. Handles client-side clean-up responsibilities.
+        /// </summary>
+        public virtual void OnClientStop()
+        {
+            Running = false;
+        }
+
+        #endregion
+
+
+        #region Server Methods
+
+        /// <summary>
+        ///     Called when the effect is first run. Handles server-side responsibilities.
+        /// </summary>
+        /// <param name="player">The player that made the request to the server.</param>
+        /// <param name="sapi">The server side core game API.</param>
+        public virtual void OnServerStart(IServerPlayer player, ICoreServerAPI sapi)
+        {
+            Running = true;
+        }
+
+        /// <summary>
         /// Called every server-side game tick.
         /// </summary>
         /// <param name="dt">The time, in milliseconds, between this method call, and the last method call.</param>
@@ -94,20 +103,15 @@ namespace Chaos.Engine.Primitives
         }
 
         /// <summary>
-        ///     Called when the effect has ended. Handles client-side clean-up responsibilities.
-        /// </summary>
-        public virtual void OnClientStop()
-        {
-            Running = false;
-        }
-
-        /// <summary>
         ///     Called when the effect has ended. Handles server-side clean-up responsibilities.
         /// </summary>
         public virtual void OnServerStop()
         {
             Running = false;
         }
+
+        #endregion
+
 
         #region Implementation of IDisposable Pattern.
 

@@ -1,19 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using System.ComponentModel.Composition.ReflectionModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Chaos.Engine.Contracts;
 using Chaos.Engine.Extensions;
 using Chaos.Engine.Network.Messages;
 using Chaos.Engine.Primitives;
 using VintageMods.Core.Extensions;
+using VintageMods.Core.IO;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.Server;
 
-namespace Chaos.Mod.Effects
+namespace Chaos.Mod.Controllers
 {
     // HACK: This class is currently tightly coupled to the ModSystem. Further refactoring must be done.
 
@@ -29,15 +32,15 @@ namespace Chaos.Mod.Effects
 
         private static IEnumerable<IChaosEffect> Effects { get; set; }
 
-        private static IClientNetworkChannel ClientNetworkChannel { get; set; }
-        private static IServerNetworkChannel ServerNetworkChannel { get; set; }
+        private static IClientNetworkChannel ClientChannel { get; set; }
+        private static IServerNetworkChannel ServerChannel { get; set; }
 
 
         public class ClientSide
         {
             public void Initialise(IClientNetworkChannel channel)
             {
-                ClientNetworkChannel = channel.RegisterMessageType<HandleEffectPacket>();
+                ClientChannel ??= channel.RegisterMessageType<HandleEffectPacket>();
             }
 
             public void StartExecute(string id)
@@ -45,7 +48,7 @@ namespace Chaos.Mod.Effects
                 var effect = Effects.FirstOrDefault(p => p.Id == id);
                 if (effect is null) return;
                     effect.OnClientStart(Api as ICoreClientAPI);
-                ClientNetworkChannel.SendPacket(new HandleEffectPacket(id));
+                ClientChannel.SendPacket(new HandleEffectPacket(id));
             }
 
         }
@@ -54,7 +57,7 @@ namespace Chaos.Mod.Effects
         {
             public void Initialise(IServerNetworkChannel channel)
             {
-                ServerNetworkChannel = channel
+                ServerChannel ??= channel
                     .RegisterMessageType<HandleEffectPacket>()
                     .SetMessageHandler<HandleEffectPacket>(StartExecute);
             }
@@ -82,12 +85,42 @@ namespace Chaos.Mod.Effects
             //? A lot of this will need to be refactored out, and handled globally, by the ChaosAPI.
             //? Maybe, even extending the FileManager class to handle watched Directories as well.
 
+
+            //? MEF Composition needs to be expanded, so that you import a Pack. Not just a list of Effects.
+            //? When importing a pack, you'd need to copy the assets files from embedded resources, into
+            //? the correct locations in game. (PARTIALLY IMPLEMENTED)
+            
+            //? You can do the same with settings files, but they are more easy to manage.
+
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var packPath = Path.Combine(GamePaths.DataPath, "ChaosMod", "Packs");
             Directory.CreateDirectory(packPath);
-            cat.Catalogs.Add(new DirectoryCatalog(packPath));
+            cat.Catalogs.Add(new DirectoryCatalog(directoryName!));
+            var container = new CompositionContainer(cat);
+
+            foreach (var assembly in container.GetAssembliesWithExports())
+            {
+                ResourceManager.DisembedAssets(assembly, directoryName);
+            }
             
-            new CompositionContainer(cat).ComposeParts(this);
+            container.ComposeParts(this);
             Effects ??= EffectImports;
+        }
+    }
+
+    public static class MefExtensions
+    {
+        public static IEnumerable<Assembly> GetAssembliesWithExports(this CompositionContainer container)
+        {
+            return container.Catalog?.Parts
+                .Select(part => ReflectionModelServices.GetPartType(part).Value.Assembly)
+                .Distinct()
+                .ToList();
+        }
+
+        public static void AddIfNotPresent<T>(this List<T> array, T item)
+        {
+            if (!array.Contains(item)) array.Add(item);
         }
     }
 }

@@ -10,10 +10,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\VintageMods\VintageMods.Core\VintageMods.Core.csproj" />
+    <ProjectReference Include="..\..\VintageMods\VintageMods.Core\VintageMods.Core.csproj">
+      <Private>false</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>D:\Games\Vintage Story\Lib\Newtonsoft.Json.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
     <Reference Include="protobuf-net">
       <HintPath>D:\Games\Vintage Story\Lib\protobuf-net.dll</HintPath>
       <Private>false</Private>

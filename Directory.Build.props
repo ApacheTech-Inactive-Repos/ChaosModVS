@@ -10,6 +10,12 @@
 		<RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="$(MSBuildProjectName.IndexOf('Chaos.Effects')) == 0">
+		<OutputPath>$(SolutionDir).effects</OutputPath>
+		<OutDir>$(OutputPath)</OutDir>
+		<RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+	</PropertyGroup>
+
 	<!--============================================================================-->
 	<!-- Pre Build Tasks -->
 	<!--============================================================================-->
@@ -44,6 +50,11 @@
 	<Target Name="PostBuild_CleanTargetDirectory" AfterTargets="PostBuild_DeleteZipFiles" Condition="$(MSBuildProjectName.IndexOf('Chaos.Mod')) == 0 AND $(ConfigurationName) == Release">
 		<Exec Command="del &quot;$(TargetDir)src\*.json&quot; &gt;nul 2&gt;&amp;1&#xD;&#xA;
                    del &quot;$(TargetDir)src\*.pdb&quot; &gt;nul 2&gt;&amp;1" />
+	</Target>
+
+	<Target Name="PostBuild_CleanTargetDirectory" AfterTargets="PostBuild_DeleteZipFiles" Condition="$(ConfigurationName) == Release">
+		<Exec Command="del &quot;$(TargetDir)*deps.json&quot; &gt;nul 2&gt;&amp;1&#xD;&#xA;
+                   del &quot;$(TargetDir)*.pdb&quot; &gt;nul 2&gt;&amp;1" />
 	</Target>
 
 	<!-- Copy necessary files to src directory -->

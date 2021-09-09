@@ -8,10 +8,10 @@ Castle Windsor is probably a bit overkill, for the size of the project; and I do
 
 Are there any other contenders, around the level of AutoMapper, that would work for a project of this size?
 
-    SimpleIoc
-    AutoFac
-    Microsoft Unity (not to be confused with Unity Game Engine)
-    Ninject
+ - SimpleIoc
+ - AutoFac
+ - Microsoft Unity (not to be confused with Unity Game Engine)
+ - Ninject
 
 
 ## Test Driven Development (TDD)
@@ -20,4 +20,12 @@ Is it possible to set up a dummy rig, so that we can do TDD on the middleware as
 
 How does TDD play with MEF? This is a million miles from FizzBuzz.
 
-## 
+## Settings Files for Effects...
+
+```csharp
+    var chaosSettings = new ExpandoObject();
+    var blastType = chaosSettings["Default"]["Creatures"]["ObliterateAllNearbyAnimals"]["BlastType"].As<EnumBlastType>();
+    var effectSettings = chaosSettings[$"{Pack}"][$"{ExecutionType}"][$"{Id}"];
+    var injureRadius = effectSettings["InjureRadius"].As<double>();
+    var destructionRadius = effectSettings.Get<double>("DestructionRadius");
+```

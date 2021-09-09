@@ -20,6 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VintageMods.Core.MemoryAdap
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{912DA490-1987-4991-B7D9-A83EA4D104E6}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		Directory.Build.props = Directory.Build.props
 		LICENCE.md = LICENCE.md
 		README.md = README.md
@@ -30,6 +31,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chaos.Engine", "Chaos.Engine\Chaos.Engine.csproj", "{509C83CD-15BE-405A-8CAF-278C1E3F3644}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chaos.Mod", "Chaos.Mod\Chaos.Mod.csproj", "{BF513C71-CBA3-47D7-A787-F30FB6AA50A7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Effects Libraries", "Effects Libraries", "{5C64468F-CCBF-4069-952F-784448EF66F6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chaos.Effects.Default", "Chaos.Effects.Default\Chaos.Effects.Default.csproj", "{ED13AB9D-98D7-42F5-A39C-3C20AB760057}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +62,10 @@ Global
 		{BF513C71-CBA3-47D7-A787-F30FB6AA50A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF513C71-CBA3-47D7-A787-F30FB6AA50A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF513C71-CBA3-47D7-A787-F30FB6AA50A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED13AB9D-98D7-42F5-A39C-3C20AB760057}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED13AB9D-98D7-42F5-A39C-3C20AB760057}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED13AB9D-98D7-42F5-A39C-3C20AB760057}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED13AB9D-98D7-42F5-A39C-3C20AB760057}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +76,7 @@ Global
 		{23810C45-4036-49E2-8DF1-D682CE55DDFF} = {F2DA2961-990F-4E4C-BC7D-921CE7917225}
 		{509C83CD-15BE-405A-8CAF-278C1E3F3644} = {F2DA2961-990F-4E4C-BC7D-921CE7917225}
 		{BF513C71-CBA3-47D7-A787-F30FB6AA50A7} = {2576B65A-AFF2-4E55-A93D-216D9E779EC8}
+		{ED13AB9D-98D7-42F5-A39C-3C20AB760057} = {5C64468F-CCBF-4069-952F-784448EF66F6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F236E4EF-9B9D-49A8-BC47-BFE4E599E1D4}
