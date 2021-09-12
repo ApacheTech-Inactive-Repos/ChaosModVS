@@ -8,6 +8,7 @@ using VintageMods.Core.Maths;
 using VintageMods.Core.ModSystems;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.Client.NoObf;
@@ -82,7 +83,6 @@ namespace Chaos.Mod
             Capi.Input.SetHotKeyHandler("roll-acw", _ =>
             {
                 //PlayerCameraEx.RollAntiClockwise();
-                AddForceTo(Capi.World.Player);
                 return true;
             });
 
@@ -106,11 +106,33 @@ namespace Chaos.Mod
             Capi.Shader.ReloadShaders();
         }
 
-        private void AddForceTo(IPlayer player)
+        private void AddForceTo(IPlayer player, Vec3d forwardVec, double force)
         {
-            var vecAhead = player.Entity.Pos.Motion.Ahead(-1, 0, player.Entity.BodyYaw);
-            player.Entity.Pos.Motion.X = vecAhead.X * 0.01;
-            player.Entity.Pos.Motion.Z = vecAhead.Z * 0.01;
+            player.Entity.Pos.Motion.X = forwardVec.X * force;
+            player.Entity.Pos.Motion.Y = forwardVec.Y * force;
+            player.Entity.Pos.Motion.Z = forwardVec.Z * force;
+        }
+
+        private EntityPos LookAwayFrom(EntityPos agentPos, Vec3d targetPos)
+        {
+            var cartesianCoordinates = targetPos.SubCopy(agentPos.XYZ).Normalize();
+            var yaw = GameMath.TWOPI - (float)Math.Atan2(cartesianCoordinates.Z, cartesianCoordinates.X);
+            var pitch = (float)Math.Asin(-cartesianCoordinates.Y);
+            var entityPos = agentPos.Copy();
+            entityPos.Yaw = yaw % GameMath.TWOPI;
+            entityPos.Pitch = GameMath.PI - pitch;
+            return entityPos;
+        }
+
+        public EntityPos LookAtTarget(EntityPos agentPos, Vec3d targetPos)
+        {
+            var cartesianCoordinates = targetPos.SubCopy(agentPos.XYZ).Normalize();
+            var yaw = GameMath.TWOPI - (float)Math.Atan2(cartesianCoordinates.Z, cartesianCoordinates.X);
+            var pitch = (float)Math.Asin(cartesianCoordinates.Y);
+            var entityPos = agentPos.Copy();
+            entityPos.Yaw = yaw % GameMath.TWOPI;
+            entityPos.Pitch = GameMath.PI - pitch;
+            return entityPos;
         }
 
         #endregion

@@ -34,8 +34,8 @@ namespace Chaos.Mod.Effects.Shader
         }
 
         public override void OnClientStop()
-		{
-			Api.ForClient().Event.EnqueueMainThreadTask(() =>
+        {
+            Api.ForClient().Event.EnqueueMainThreadTask(() =>
             {
                 Api.ForClient().Event.ReloadShader -= LoadShader;
                 Api.ForClient().Event.UnregisterRenderer(_nightVisionRenderer, EnumRenderStage.AfterFinalComposition);
@@ -47,23 +47,23 @@ namespace Chaos.Mod.Effects.Shader
         public bool LoadShader()
         {
             var capi = Api.ForClient();
-			_nightVisionShaderProg = capi.Shader.NewShaderProgram();
-			_nightVisionShaderProg.VertexShader = capi.Shader.NewShader(EnumShaderType.VertexShader);
-			_nightVisionShaderProg.FragmentShader = capi.Shader.NewShader(EnumShaderType.FragmentShader);
-			_nightVisionShaderProg.VertexShader.Code = GetVertexShaderCode();
+            _nightVisionShaderProg = capi.Shader.NewShaderProgram();
+            _nightVisionShaderProg.VertexShader = capi.Shader.NewShader(EnumShaderType.VertexShader);
+            _nightVisionShaderProg.FragmentShader = capi.Shader.NewShader(EnumShaderType.FragmentShader);
+            _nightVisionShaderProg.VertexShader.Code = GetVertexShaderCode();
             _nightVisionShaderProg.FragmentShader.Code = GetFragmentShaderCode(_nightVisionRenderer?.Mode ?? EnumNightVisionMode.Default);
             capi.Shader.RegisterMemoryShaderProgram("nightvision", _nightVisionShaderProg);
-			_nightVisionShaderProg.Compile();
-			if (_nightVisionRenderer != null)
-			{
-				_nightVisionRenderer.Shader = _nightVisionShaderProg;
-			}
-			return true;
-		}
-		
+            _nightVisionShaderProg.Compile();
+            if (_nightVisionRenderer != null)
+            {
+                _nightVisionRenderer.Shader = _nightVisionShaderProg;
+            }
+            return true;
+        }
+
         private string GetVertexShaderCode()
-		{
-			return @"
+        {
+            return @"
                 #version 330 core
                 #extension GL_ARB_explicit_attrib_location: enable
                 layout(location = 0) in vec3 vertex;
@@ -75,36 +75,36 @@ namespace Chaos.Mod.Effects.Shader
                     gl_Position = vec4(vertex.xy, 0, 1);
                     uv = (vertex.xy + 1.0) / 2.0;
                 }";
-		}
-		
+        }
+
         private string GetFragmentShaderCode(EnumNightVisionMode mode)
-		{
-			var str = "#version 330 core\r\n";
-			if ((mode & EnumNightVisionMode.FilterGray) > EnumNightVisionMode.FilterNone)
-			{
-				str += "#define GRAY 1\r\n";
-			}
-			if ((mode & EnumNightVisionMode.FilterSepia) > EnumNightVisionMode.FilterNone)
-			{
-				str += "#define SEPIA 1\r\n";
-			}
-			if ((mode & EnumNightVisionMode.FilterGreen) > EnumNightVisionMode.FilterNone)
-			{
-				str += "#define GREEN 1\r\n";
-			}
-			if ((mode & EnumNightVisionMode.FilterRed) > EnumNightVisionMode.FilterNone)
-			{
-				str += "#define RED 1\r\n";
-			}
-			if ((mode & EnumNightVisionMode.FilterBlue) > EnumNightVisionMode.FilterNone)
-			{
-				str += "#define BLUE 1\r\n";
-			}
-			if ((mode & EnumNightVisionMode.Compress) > EnumNightVisionMode.FilterNone)
-			{
-				str += "#define COMPRESS 1\r\n";
-			}
-			return str + @"
+        {
+            var str = "#version 330 core\r\n";
+            if ((mode & EnumNightVisionMode.FilterGray) > EnumNightVisionMode.FilterNone)
+            {
+                str += "#define GRAY 1\r\n";
+            }
+            if ((mode & EnumNightVisionMode.FilterSepia) > EnumNightVisionMode.FilterNone)
+            {
+                str += "#define SEPIA 1\r\n";
+            }
+            if ((mode & EnumNightVisionMode.FilterGreen) > EnumNightVisionMode.FilterNone)
+            {
+                str += "#define GREEN 1\r\n";
+            }
+            if ((mode & EnumNightVisionMode.FilterRed) > EnumNightVisionMode.FilterNone)
+            {
+                str += "#define RED 1\r\n";
+            }
+            if ((mode & EnumNightVisionMode.FilterBlue) > EnumNightVisionMode.FilterNone)
+            {
+                str += "#define BLUE 1\r\n";
+            }
+            if ((mode & EnumNightVisionMode.Compress) > EnumNightVisionMode.FilterNone)
+            {
+                str += "#define COMPRESS 1\r\n";
+            }
+            return str + @"
                 uniform sampler2D primaryScene;
                 uniform float intensity;
                 uniform float brightness;
@@ -153,6 +153,6 @@ namespace Chaos.Mod.Effects.Shader
                     outColor.b = min((color.b * (1.0 - inten) + mixColor.b * inten) * scale, 1.0);
                     outColor.a = color.a;
                 }";
-		}
-	}
+        }
+    }
 }
