@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Chaos.Engine.Primitives;
+using VintageMods.Core.Extensions;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 
@@ -20,12 +22,13 @@ namespace Chaos.Engine.Controllers
 
         public class ServerSide
         {
-            public IEnumerable<EntityAgent> GetAllNearbyCreatures(BlockPos pos, int radius)
+            public IEnumerable<EntityAgent> GetAllNearbyCreatures(BlockPos pos, int radius, string[] blacklist = null)
             {
                 var list = new List<EntityAgent>();
                 var entities = Sapi.World.LoadedEntities.Values;
                 foreach (var entity in entities)
                 {
+                    if (entity.Code.Path.ContainsAny(blacklist ?? new string[] { })) continue;
                     if (entity is not (EntityAgent {Alive: true} agent and not EntityPlayer)) continue;
                     if (agent.Pos.AsBlockPos.InRangeHorizontally(pos.X, pos.Z, radius))
                         list.Add(agent);

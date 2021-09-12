@@ -23,9 +23,4 @@ How does TDD play with MEF? This is a million miles from FizzBuzz.
 ## Settings Files for Effects...
 
 ```csharp
-    var chaosSettings = new ExpandoObject();
-    var blastType = chaosSettings["Default"]["Creatures"]["ObliterateAllNearbyAnimals"]["BlastType"].As<EnumBlastType>();
-    var effectSettings = chaosSettings[$"{Pack}"][$"{ExecutionType}"][$"{Id}"];
-    var injureRadius = effectSettings["InjureRadius"].As<double>();
-    var destructionRadius = effectSettings.Get<double>("DestructionRadius");
 ```

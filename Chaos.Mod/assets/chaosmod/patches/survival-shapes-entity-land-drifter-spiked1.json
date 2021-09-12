@@ -1,0 +1,221 @@
+[
+  {
+    "op": "add",
+    "file": "shapes/entity/land/drifter/spiked1.json",
+    "path": "/animations/-",
+    "value": {
+      "name": "Dance",
+      "code": "dance",
+      "quantityframes": 30,
+      "onActivityStopped": "Rewind",
+      "onAnimationEnd": "Repeat",
+      "keyframes": [
+        {
+          "frame": 0,
+          "elements": {
+            "Body": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "R shoulder": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "R upper arm": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "R lower arm": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "R hand": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "L shoulder": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "L upper arm": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "L lower arm": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "L hand": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "Abdomen": {},
+            "L thigh": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "L feet": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "R thigh": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "R feet": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "Neck": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "Head": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            }
+          }
+        },
+        {
+          "frame": 7,
+          "elements": {
+            "Body": {
+              "rotationX": -5.0,
+              "rotationY": 5.0,
+              "rotationZ": -5.0
+            },
+            "Abdomen": {},
+            "L thigh": {
+              "rotationX": 0.0,
+              "rotationY": -14.0,
+              "rotationZ": -69.0
+            },
+            "L feet": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 36.0
+            },
+            "Neck": {},
+            "Head": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": -22.0
+            },
+            "Kupris": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            }
+          }
+        },
+        {
+          "frame": 15,
+          "elements": {
+            "Body": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "Abdomen": {},
+            "L thigh": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "L feet": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "R thigh": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "R feet": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "L shoulder": {
+              "rotationX": 50.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "L upper arm": {
+              "rotationX": 47.0,
+              "rotationY": -180.0,
+              "rotationZ": 0.0
+            },
+            "L lower arm": {
+              "rotationX": -39.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "L hand": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "R shoulder": {
+              "rotationX": -55.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "R upper arm": {
+              "rotationX": -50.0,
+              "rotationY": 180.0,
+              "rotationZ": 0.0
+            },
+            "R lower arm": {
+              "rotationX": 33.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            },
+            "R hand": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 0.0
+            }
+          }
+        },
+        {
+          "frame": 22,
+          "elements": {
+            "Body": {
+              "rotationX": 5.0,
+              "rotationY": -5.0,
+              "rotationZ": -5.0
+            },
+            "Abdomen": {},
+            "R thigh": {
+              "rotationX": 0.0,
+              "rotationY": 14.0,
+              "rotationZ": -69.0
+            },
+            "R feet": {
+              "rotationX": 0.0,
+              "rotationY": 0.0,
+              "rotationZ": 36.0
+            }
+          }
+        }
+      ]
+    }
+  }
+]

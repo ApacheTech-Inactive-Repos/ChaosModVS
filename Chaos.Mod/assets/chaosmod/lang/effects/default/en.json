@@ -1,0 +1,46 @@
+{
+  "Effects.Default.Creature.ObliterateAllNearbyAnimals.Title": "Obliterate All Nearby Animals",
+  "Effects.Default.Creature.ObliterateAllNearbyAnimals.Description": "All animals within range of the player explode in a fiery ball of death.",
+
+  "Effects.Default.Misc.QuakeProFOV.Title": "Quake Pro FOV",
+  "Effects.Default.Misc.QuakeProFOV.Description": "Increases the Field of View to eye-watering levels.",
+
+  "Effects.Default.Misc.ZoomZoomCam.Title": "Zoom Zoom Cam",
+  "Effects.Default.Misc.ZoomZoomCam.Description": "Makes the camera zoom in and out, continuously.",
+
+  "Effects.Default.Meta.NoChaos.Title": "No Chaos",
+  "Effects.Default.Meta.NoChaos.Description": "Disables all other effects, while No Chaos is active.",
+
+  "Effects.Default.Misc.WhatAustraliaLooksLike.Title": "Is This What Australia Looks Like?",
+  "Effects.Default.Misc.WhatAustraliaLooksLike.Description": "Turns the camera upside down.",
+
+  "Effects.Default.Player.Player.Title": "#Yeet",
+  "Effects.Default.Player.Player.Description": "Launch the player into the stratosphere.",
+
+  "Effects.Default.Creature.YeetAllNearbyCreatures.Title": "Spinning Camera",
+  "Effects.Default.Creature.YeetAllNearbyCreatures.Description": "Makes the game nigh-on impossible to play.",
+
+  "Effects.Default.Creature.ReviveAllNearbyCorpses.Title": "Revive All Nearby Corpses",
+  "Effects.Default.Creature.ReviveAllNearbyCorpses.Description": "Any corpses within range of the.",
+
+  "Effects.Default.Misc.SpinningCamera.Title": "Spinning Camera",
+  "Effects.Default.Misc.SpinningCamera.Description": "Makes the game nigh-on impossible to play.",
+
+  "Effects.Default.Misc.SpinningCamera.Title": "Spinning Camera",
+  "Effects.Default.Misc.SpinningCamera.Description": "Makes the game nigh-on impossible to play.",
+
+  "Effects.Default.Misc.SpinningCamera.Title": "Spinning Camera",
+  "Effects.Default.Misc.SpinningCamera.Description": "Makes the game nigh-on impossible to play.",
+
+  "Effects.Default.Misc.SpinningCamera.Title": "Spinning Camera",
+  "Effects.Default.Misc.SpinningCamera.Description": "Makes the game nigh-on impossible to play.",
+
+  "Effects.Default.Misc.SpinningCamera.Title": "Spinning Camera",
+  "Effects.Default.Misc.SpinningCamera.Description": "Makes the game nigh-on impossible to play.",
+
+  "Effects.Default.Misc.SpinningCamera.Title": "Spinning Camera",
+  "Effects.Default.Misc.SpinningCamera.Description": "Makes the game nigh-on impossible to play.",
+
+  "Effects.Default.Misc.SpinningCamera.Title": "Spinning Camera",
+  "Effects.Default.Misc.SpinningCamera.Description": "Makes the game nigh-on impossible to play."
+}

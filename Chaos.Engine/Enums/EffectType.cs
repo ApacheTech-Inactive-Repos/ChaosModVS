@@ -7,7 +7,7 @@ namespace Chaos.Engine.Enums
     ///     Determines the execution type of an effect.
     /// </summary>
     [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
-    public enum ExecutionType
+    public enum EffectType
     {
         /// <summary>
         ///     Effects that spawn, despawn, replace, or otherwise change blocks.

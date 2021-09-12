@@ -20,32 +20,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="assets\chaosmod\config\effects\default\effect-settings.json" />
-		<None Remove="assets\chaosmod\lang\en.json" />
-		<None Remove="assets\chaosmod\sounds\effects\obliterate.ogg" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<EmbeddedResource Include="assets\chaosmod\sounds\effects\obliterate.ogg" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<EmbeddedResource Include="assets\chaosmod\config\effects\default\effect-settings.json" />
-		<EmbeddedResource Include="assets\chaosmod\lang\effects\default\en.json">
-			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
-		</EmbeddedResource>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="Blocks\" />
-		<Folder Include="Items\" />
-		<Folder Include="Meta\" />
-		<Folder Include="Player\" />
-		<Folder Include="Time\" />
-		<Folder Include="Weather\" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\..\VintageMods\VintageMods.Core\VintageMods.Core.csproj">
 			<Private>false</Private>
 		</ProjectReference>
@@ -56,6 +30,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Reference Include="0Harmony">
+		  <HintPath>D:\Games\Vintage Story\Lib\0Harmony.dll</HintPath>
+		  <Private>false</Private>
+		</Reference>
 		<Reference Include="Microsoft.CSharp">
 			<HintPath>..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\Microsoft.CSharp.dll</HintPath>
 			<Private>false</Private>
@@ -63,6 +41,14 @@
 		<Reference Include="VintagestoryAPI">
 			<HintPath>D:\Games\Vintage Story\VintagestoryAPI.dll</HintPath>
 			<Private>false</Private>
+		</Reference>
+		<Reference Include="VintagestoryLib">
+		  <HintPath>D:\Games\Vintage Story\VintagestoryLib.dll</HintPath>
+		  <Private>false</Private>
+		</Reference>
+		<Reference Include="VSEssentials">
+		  <HintPath>D:\Games\Vintage Story\Mods\VSEssentials.dll</HintPath>
+		  <Private>false</Private>
 		</Reference>
 	</ItemGroup>
 

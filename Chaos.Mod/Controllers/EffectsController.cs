@@ -1,126 +1,153 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
-using System.ComponentModel.Composition.ReflectionModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using AutoMapper.Configuration.Conventions;
+using Chaos.Engine.API;
+using Chaos.Engine.Attributes;
 using Chaos.Engine.Contracts;
 using Chaos.Engine.Extensions;
 using Chaos.Engine.Network.Messages;
 using Chaos.Engine.Primitives;
+using Chaos.Engine.Systems;
+using Chaos.Mod.Extensions;
+using HarmonyLib;
 using VintageMods.Core.Extensions;
 using VintageMods.Core.IO;
+using VintageMods.Core.IO.Extensions;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
-using Vintagestory.API.Config;
+using Vintagestory.API.Datastructures;
 using Vintagestory.API.Server;
 
 namespace Chaos.Mod.Controllers
 {
     // HACK: This class is currently tightly coupled to the ModSystem. Further refactoring must be done.
 
-    public class EffectsController : ControllerBase<EffectsController.ServerSide, EffectsController.ClientSide>
+    public class EffectsController
     {
-        private new static ICoreAPI Api { get; set; }
+        private readonly IChaosAPI _chaosApi;
 
         [Export]
-        private ICoreAPI ExportableCoreAPI { get; set; }
+        private ICoreAPI Api { get; set; }
 
         [ImportMany("ChaosEffects", typeof(IChaosEffect), AllowRecomposition = true)]
-        private IEnumerable<IChaosEffect> EffectImports { get; set; }
+        private IEnumerable<IChaosEffect> Effects { get; set; }
 
-        private static IEnumerable<IChaosEffect> Effects { get; set; }
-
-        private static IClientNetworkChannel ClientChannel { get; set; }
-        private static IServerNetworkChannel ServerChannel { get; set; }
+        private IClientNetworkChannel ClientChannel { get; set; }
+        private IServerNetworkChannel ServerChannel { get; set; }
 
 
-        public class ClientSide
+        public void InitialiseClient(IClientNetworkChannel channel)
         {
-            public void Initialise(IClientNetworkChannel channel)
-            {
-                ClientChannel ??= channel.RegisterMessageType<HandleEffectPacket>();
-            }
+            ClientChannel ??= channel.RegisterMessageType<HandleEffectPacket>();
+        }
 
-            public void StartExecute(string id)
+        public void StartExecuteClient(string id)
+        {
+            var effect = Effects.FirstOrDefault(p => p.Id == id);
+            if (effect is null) return;
+
+
+            var async = (Api as ICoreClientAPI).GetVanillaClientSystem<ClientSystemChaosMod>();
+
+            async.EnqueueAsyncTask(() =>
             {
-                var effect = Effects.FirstOrDefault(p => p.Id == id);
-                if (effect is null) return;
-                    effect.OnClientStart(Api as ICoreClientAPI);
                 ClientChannel.SendPacket(new HandleEffectPacket(id));
-            }
-
+                effect.OnClientStart(Api as ICoreClientAPI);
+            });
         }
 
-        public class ServerSide
+        public void InitialiseServer(IServerNetworkChannel channel)
         {
-            public void Initialise(IServerNetworkChannel channel)
-            {
-                ServerChannel ??= channel
-                    .RegisterMessageType<HandleEffectPacket>()
-                    .SetMessageHandler<HandleEffectPacket>(StartExecute);
-            }
+            ServerChannel ??= channel
+                .RegisterMessageType<HandleEffectPacket>()
+                .SetMessageHandler<HandleEffectPacket>(StartExecuteServer);
+        }
 
-            public void StartExecute(IServerPlayer player, HandleEffectPacket packet)
+        private void StartExecuteServer(IServerPlayer player, HandleEffectPacket packet)
+        {
+            var effect = Effects.FirstOrDefault(p => p.Id == packet.EffectId);
+            if (effect is null) return;
+
+            var async = (Api as ICoreServerAPI).GetVanillaServerSystem<ServerSystemChaosMod>();
+            async.EnqueueAsyncTask(() =>
             {
-                var effect = Effects.FirstOrDefault(p => p.Id == packet.EffectId);
-                if (effect is null) return;
                 effect.OnServerStart(player, Api as ICoreServerAPI);
-                player.SendMessage(effect.Title());
-                player.SendMessage(effect.Description());
-            }
+            });
 
+            player.SendMessage(effect.Title());
+            player.SendMessage(effect.Description());
         }
 
-        public EffectsController(ICoreAPI api) : base(api)
+        public EffectsController(ICoreAPI api)
         {
-            Api ??= ExportableCoreAPI ??= api;
+            Api ??= api;
+            _chaosApi ??= new ChaosAPI(api);
+            Effects = GetType().Assembly.GetEnumerableOfType<ChaosEffect>();
+            foreach (var effect in Effects)
+            {
+                effect.Api = api;
+                effect.ChaosApi = _chaosApi;
+                // TODO: Any other effect initialisation logic goes here.
+            }
+        }
 
+        private void ComposeEffects()
+        {
             var cat = new AggregateCatalog();
-            cat.Catalogs.Add(new AssemblyCatalog(GetType().Assembly));
-
-            // HACK: Added a Directory Catalogue, in preparation for separate Effects libraries.
 
             //? A lot of this will need to be refactored out, and handled globally, by the ChaosAPI.
             //? Maybe, even extending the FileManager class to handle watched Directories as well.
 
-
-            //? MEF Composition needs to be expanded, so that you import a Pack. Not just a list of Effects.
-            //? When importing a pack, you'd need to copy the assets files from embedded resources, into
-            //? the correct locations in game. (PARTIALLY IMPLEMENTED)
-            
-            //? You can do the same with settings files, but they are more easy to manage.
-
-            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+#if DEBUG
+            var packPath = Path.GetFullPath(@"C:\Users\Apache\source\repos\ChaosModVS\.effects");
+#else
             var packPath = Path.Combine(GamePaths.DataPath, "ChaosMod", "Packs");
+#endif
             Directory.CreateDirectory(packPath);
-            cat.Catalogs.Add(new DirectoryCatalog(directoryName!));
+            cat.Catalogs.Add(new AssemblyCatalog(GetType().Assembly));
+            cat.Catalogs.Add(new AssemblyCatalog(typeof(ChaosAPI).Assembly));
+            cat.Catalogs.Add(new DirectoryCatalog(packPath!));
             var container = new CompositionContainer(cat);
 
             foreach (var assembly in container.GetAssembliesWithExports())
             {
-                ResourceManager.DisembedAssets(assembly, directoryName);
+                ResourceManager.DisembedAssets(assembly);
             }
-            
+
             container.ComposeParts(this);
-            Effects ??= EffectImports;
         }
     }
 
-    public static class MefExtensions
+    public static class AssemblyEx
     {
-        public static IEnumerable<Assembly> GetAssembliesWithExports(this CompositionContainer container)
+        public static IEnumerable<T> GetEnumerableOfType<T>(this Assembly assembly, params object[] constructorArgs) where T : class, IComparable<T>
         {
-            return container.Catalog?.Parts
-                .Select(part => ReflectionModelServices.GetPartType(part).Value.Assembly)
-                .Distinct()
+            var objects = assembly
+                .GetTypes()
+                .Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(T)))
+                .Select(type => (T) Activator.CreateInstance(type, constructorArgs))
                 .ToList();
+            objects.Sort();
+
+            return objects;
         }
 
-        public static void AddIfNotPresent<T>(this List<T> array, T item)
+        public static IEnumerable<Type> GetDerivedTypes<T>(this T attribute, Assembly assembly) where T : Attribute
         {
-            if (!array.Contains(item)) array.Add(item);
+            return assembly.GetTypes()
+                .Where(type => type.GetCustomAttributes(typeof(T), true).Length > 0);
+        }
+
+        public static IEnumerable<Type> GetTypesWithAttribute<T>(this Assembly assembly)
+        {
+            return assembly.GetTypes()
+                .Where(type => type.GetCustomAttributes(typeof(T), true).Length > 0);
         }
     }
+
 }

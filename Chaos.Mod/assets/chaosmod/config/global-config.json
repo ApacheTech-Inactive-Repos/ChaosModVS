@@ -1,0 +1,9 @@
+{
+  "EffectTickInterval": 20, 
+  "EffectInterval": 60,
+  "EffectDuration": {
+    "Short": 30,
+    "Standard": 60,
+    "Long": 180
+  }
+}

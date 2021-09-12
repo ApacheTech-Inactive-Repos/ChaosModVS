@@ -1,4 +1,5 @@
 ﻿using Chaos.Engine.Controllers;
+using Vintagestory.API.Datastructures;
 
 namespace Chaos.Engine.Contracts
 {
@@ -17,5 +18,11 @@ namespace Chaos.Engine.Contracts
         TimeController Time { get; }
         WeatherController Weather { get; }
         GameworldController World { get; }
+
+        /// <summary>
+        ///     Gets the global configuration options.
+        /// </summary>
+        /// <value>The settings.</value>
+        JsonObject GlobalConfig { get; }
     }
 }

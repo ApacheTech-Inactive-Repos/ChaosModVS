@@ -16,7 +16,7 @@ namespace Chaos.Engine.Primitives
         {
             Api = api;
             Capi = api as ICoreClientAPI;
-            Sapi = api  as ICoreServerAPI;
+            Sapi = api as ICoreServerAPI;
         }
 
 

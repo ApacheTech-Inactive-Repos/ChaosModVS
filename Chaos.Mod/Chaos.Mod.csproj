@@ -7,7 +7,16 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Remove="assets\chaosmod\config\effects\default\effect-settings.json" />
+		<None Remove="assets\chaosmod\config\global-config.json" />
+		<None Remove="assets\chaosmod\lang\effects\default\en.json" />
 		<None Remove="assets\chaosmod\lang\en.json" />
+		<None Remove="assets\chaosmod\patches\survival-shapes-entity-land-drifter-deerhorn.json" />
+		<None Remove="assets\chaosmod\patches\survival-shapes-entity-land-drifter-knife.json" />
+		<None Remove="assets\chaosmod\patches\survival-shapes-entity-land-drifter-spiked1.json" />
+		<None Remove="assets\chaosmod\patches\survival-shapes-entity-land-drifter-spiked2.json" />
+		<None Remove="assets\chaosmod\patches\survival-shapes-entity-land-drifter-surface.json" />
+		<None Remove="assets\chaosmod\sounds\effects\obliterate.ogg" />
 		<None Remove="modinfo.json" />
 	</ItemGroup>
 
@@ -15,9 +24,39 @@
 		<Content Include="assets\chaosmod\lang\en.json">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
+		<Content Include="assets\chaosmod\patches\survival-shapes-entity-land-drifter-deerhorn.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="assets\chaosmod\patches\survival-shapes-entity-land-drifter-knife.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="assets\chaosmod\patches\survival-shapes-entity-land-drifter-spiked1.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="assets\chaosmod\patches\survival-shapes-entity-land-drifter-spiked2.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="assets\chaosmod\patches\survival-shapes-entity-land-drifter-surface.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
 		<Content Include="modinfo.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="assets\chaosmod\config\effects\default\effect-settings.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="assets\chaosmod\config\global-config.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="assets\chaosmod\lang\effects\default\en.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="assets\chaosmod\sounds\effects\obliterate.ogg">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -60,6 +99,10 @@
 		  <HintPath>D:\Games\Vintage Story\Mods\VSEssentials.dll</HintPath>
 		  <Private>false</Private>
 		</Reference>
+		<Reference Include="VSSurvivalMod">
+		  <HintPath>D:\Games\Vintage Story\Mods\VSSurvivalMod.dll</HintPath>
+		  <Private>false</Private>
+		</Reference>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -75,6 +118,13 @@
 
 	<ItemGroup>
 	  <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="AssetEnum\" />
+	  <Folder Include="Effects\Block\" />
+	  <Folder Include="Effects\Item\" />
+	  <Folder Include="Effects\Time\" />
 	</ItemGroup>
 
 </Project>

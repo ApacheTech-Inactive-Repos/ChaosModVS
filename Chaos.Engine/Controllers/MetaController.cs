@@ -10,11 +10,12 @@ namespace Chaos.Engine.Controllers
         }
 
         public class ClientSide
-        {
+        { public bool DisableEffects { get; set; }
         }
 
         public class ServerSide
         {
+            public bool DisableEffects { get; set; }
         }
     }
 }

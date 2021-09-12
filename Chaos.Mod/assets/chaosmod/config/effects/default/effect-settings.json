@@ -1,0 +1,35 @@
+{
+  // =========================================================
+  //  Creature Effects 
+  // =========================================================
+
+  "Creature": {
+    "ObliterateAllNearbyAnimals": {
+      "BlastType": "OreBlast",
+      "DestructionRadius": 6.0,
+      "InjureRadius": 12.0,
+      "PlayerDamage": 5,
+      "SmokeClouds": true,
+      "SuppressItemDrops": false
+    }
+  },
+
+  // =========================================================
+  //  Misc. Effects 
+  // =========================================================
+
+  "Misc": {
+    "QuakeProFOV": {
+      "FieldOfView": 150
+    },
+
+    "ZoomZoomCam": {
+      "MinFieldOfView": 30,
+      "MaxFieldOfView": 150
+    },
+
+    "SpinningCamera": {
+      "Speed": 1
+    }
+  }
+}

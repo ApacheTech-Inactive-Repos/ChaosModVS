@@ -1,13 +1,14 @@
 ﻿using Chaos.Engine.Contracts;
 using JetBrains.Annotations;
 using VintageMods.Core.Extensions;
+using VintageMods.Core.Threading.Systems;
 using Vintagestory.API.Server;
 using Vintagestory.Server;
 
 namespace Chaos.Engine.Systems
 {
     [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
-    public sealed class ServerSystemChaosMod : ServerSystem, IHasServerAccess
+    public sealed class ServerSystemChaosMod : ServerSystemAsyncActions, IHasServerAccess
     {
         public ServerSystemChaosMod(ServerMain server) : base(server)
         {

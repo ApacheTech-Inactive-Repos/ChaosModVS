@@ -26,7 +26,7 @@ namespace Chaos.Engine.Contracts
         /// Gets or sets the execution type of the effect.
         /// </summary>
         /// <value>The execution type of the effect.</value>
-        ExecutionType ExecutionType { get; }
+        EffectType EffectType { get; }
 
         /// <summary>
         ///     Gets or sets the length of time an effect is active for.

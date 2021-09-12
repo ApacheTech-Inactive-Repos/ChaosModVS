@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Vintagestory.API.Client;
+using Vintagestory.API.Common;
 using Vintagestory.API.Server;
 
 namespace Chaos.Engine.Contracts
@@ -53,5 +54,18 @@ namespace Chaos.Engine.Contracts
         ///     Disposes this instance, stopping the effect on both server, and client.
         /// </summary>
         void Dispose();
+
+
+        /// <summary>
+        ///     Gets or sets the chaos API.
+        /// </summary>
+        /// <value>The chaos API.</value>
+        IChaosAPI ChaosApi { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the core game API.
+        /// </summary>
+        /// <value>The universally accessible core game API.</value>
+        ICoreAPI Api { get; set; }
     }
 }

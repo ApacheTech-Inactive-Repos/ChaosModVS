@@ -12,5 +12,8 @@ namespace Chaos.Engine.Network.Messages
         public double DestructionRadius { get; set; }
         public double InjureRadius { get; set; }
         public AssetLocation SoundFile { get; set; }
+        public bool SmokeClouds { get; set; }
+        public float PlayerDamage { get; set; }
+        public bool SuppressItemDrops { get; set; }
     }
 }
