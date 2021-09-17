@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Chaos.Engine.Systems;
 using Chaos.Mod.Controllers;
 using Chaos.Mod.Renderers;
@@ -13,7 +12,6 @@ using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
-using Vintagestory.Client.NoObf;
 using Vintagestory.GameContent;
 
 [assembly: ModDomain("chaosmod", "ChaosMod")]
@@ -77,8 +75,8 @@ namespace Chaos.Mod
 
         private void RegisterHotkeys()
         {
-
             #region Keypad Hotkey Handlers
+
             //
             // NumPad 0
             //
@@ -464,8 +462,8 @@ namespace Chaos.Mod
                 var effects = new List<string>
                 {
                     "DeepFried", "NightVision", "CatsEyes", "NightVisionOld", "AcidTrip", "Yeet",
-                    "StartTemporalStorm", "HealToFull", "ThermonuclearHandGrenade", "Nothing", "QuakeProFOV", 
-                    "ZoomZoomCam", "WhatAustraliaLooksLike", "Nothing","YeetAllNearbyCreatures",
+                    "StartTemporalStorm", "HealToFull", "ThermonuclearHandGrenade", "Nothing", "QuakeProFOV",
+                    "ZoomZoomCam", "WhatAustraliaLooksLike", "Nothing", "YeetAllNearbyCreatures",
                     "ReviveAllNearbyCorpses", "ObliterateAllNearbyAnimals", "AllNearbyDriftersDance", "Forcefield",
                     "VSNoire", "NightVision", "AntiqueStory", "BlueLightDistrict", "SeeingRed", "AlienWorld"
                 };

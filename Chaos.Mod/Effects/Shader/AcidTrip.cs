@@ -1,17 +1,10 @@
 ﻿using Chaos.Engine.Enums;
-using Chaos.Mod.Effects.Weather;
 using Chaos.Mod.Renderers;
 using Chaos.Mod.Renderers.Enums;
 using Chaos.Mod.Renderers.Primitives;
 using Chaos.Mod.Renderers.Shaders;
-using VintageMods.Core.Extensions;
-using VintageMods.Core.Reflection;
+using VintageMods.Core.Helpers;
 using Vintagestory.API.Client;
-using Vintagestory.API.Common;
-using Vintagestory.API.Common.Entities;
-using Vintagestory.API.MathTools;
-using Vintagestory.API.Server;
-using Vintagestory.GameContent;
 
 namespace Chaos.Mod.Effects.Shader
 {
@@ -19,7 +12,7 @@ namespace Chaos.Mod.Effects.Shader
     {
         public override EffectType EffectType => EffectType.Shader;
         public override EffectDuration Duration => EffectDuration.Short;
-        
+
         protected override string PassName => "colour-overlay";
 
         protected override void InitialiseRenderer(OverlayRenderer renderer)

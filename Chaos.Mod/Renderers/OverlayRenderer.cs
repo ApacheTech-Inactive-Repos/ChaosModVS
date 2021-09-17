@@ -4,7 +4,7 @@ using Chaos.Mod.Renderers.Contracts;
 using Chaos.Mod.Renderers.Enums;
 using Chaos.Mod.Renderers.Shaders;
 using JetBrains.Annotations;
-using VintageMods.Core.Extensions;
+using VintageMods.Core.Helpers;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 
@@ -55,11 +55,11 @@ namespace Chaos.Mod.Renderers
                 var lightHsv = entity.LightHsv;
 
                 if (lightHsv != null) lightLevel = lightHsv.Aggregate(lightLevel, (current, t) => Math.Max(current, t));
-                
+
                 var pitchBlackMultiplier = lightLevel == 0 ? BrightnessMultiplier * 1.6f : BrightnessMultiplier * 1f;
 
                 var scaleFactor = (1f - lightLevel / 16f) * pitchBlackMultiplier;
-                Shader.Intensity = ((Shader.Intensity * (num - dt) + scaleFactor * dt) / num);
+                Shader.Intensity = (Shader.Intensity * (num - dt) + scaleFactor * dt) / num;
                 //Shader.Brightness = ((Shader.Brightness * (num - dt) + scaleFactor * dt) / num);
             }
 

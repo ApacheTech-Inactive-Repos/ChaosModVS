@@ -1,5 +1,6 @@
 ﻿using System;
 using VintageMods.Core.Extensions;
+using VintageMods.Core.Helpers;
 using VintageMods.Core.Reflection;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common.Entities;

@@ -9,7 +9,6 @@ using Chaos.Engine.Extensions;
 using Chaos.Engine.Network.Messages;
 using Chaos.Engine.Primitives;
 using Chaos.Mod.Extensions;
-using VintageMods.Core.Extensions;
 using VintageMods.Core.Helpers;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -21,15 +20,9 @@ namespace Chaos.Mod.Controllers
     {
         private ICoreAPI _api;
         private ICoreClientAPI _capi;
-        private ICoreServerAPI _sapi;
-
-        private IChaosAPI ChaosApi { get; }
 
         private long _listenerId;
-
-        private IEnumerable<IChaosEffect> Effects { get; }
-
-        private Dictionary<string, IChaosEffect> RunningEffects { get; } = new();
+        private ICoreServerAPI _sapi;
 
         public EffectsController()
         {
@@ -37,6 +30,12 @@ namespace Chaos.Mod.Controllers
             Effects = GetType().Assembly.GetEnumerableOfType<ChaosEffect>();
             foreach (var effect in Effects) effect.ChaosApi = ChaosApi;
         }
+
+        private IChaosAPI ChaosApi { get; }
+
+        private IEnumerable<IChaosEffect> Effects { get; }
+
+        private Dictionary<string, IChaosEffect> RunningEffects { get; } = new();
 
         public void InitialiseClient(ICoreClientAPI capi)
         {
@@ -127,7 +126,6 @@ namespace Chaos.Mod.Controllers
             effect.Settings = ChaosModConfig.LoadSettings(effect);
 
             if (_api.Side.IsClient())
-            {
                 AsyncEx.Client.EnqueueAsyncTask(() =>
                 {
                     switch (packet.Command)
@@ -185,10 +183,12 @@ namespace Chaos.Mod.Controllers
                             {
                                 EffectDuration.Instant => 0,
                                 EffectDuration.Short => ChaosApi.GlobalConfig["EffectDuration"]["Short"].AsInt(30),
-                                EffectDuration.Standard => ChaosApi.GlobalConfig["EffectDuration"]["Standard"].AsInt(60),
+                                EffectDuration.Standard => ChaosApi.GlobalConfig["EffectDuration"]["Standard"]
+                                    .AsInt(60),
                                 EffectDuration.Long => ChaosApi.GlobalConfig["EffectDuration"]["Long"].AsInt(120),
                                 EffectDuration.Permanent => int.MaxValue,
-                                EffectDuration.Custom => ChaosApi.GlobalConfig["CustomDurations"][effect.Pack][$"{effect.EffectType}"][effect.Id].AsInt(30),
+                                EffectDuration.Custom => ChaosApi.GlobalConfig["CustomDurations"][effect.Pack][
+                                    $"{effect.EffectType}"][effect.Id].AsInt(30),
                                 _ => throw new ArgumentOutOfRangeException()
                             };
                             if (elapsed >= duration)
@@ -204,6 +204,7 @@ namespace Chaos.Mod.Controllers
                                 effect.OnClientTick(packet.DeltaTime);
                                 NetworkEx.Client.SendPacket(packet);
                             }
+
                             break;
 
                         // On Client Stop
@@ -232,13 +233,11 @@ namespace Chaos.Mod.Controllers
                             throw new ArgumentOutOfRangeException();
                     }
                 });
-            }
 
             if (_api.Side.IsServer())
-            {
                 AsyncEx.Server.EnqueueAsyncTask(() =>
                 {
-                    var player = (IServerPlayer)_sapi.World.PlayerByUid(packet.PlayerUID);
+                    var player = (IServerPlayer) _sapi.World.PlayerByUid(packet.PlayerUID);
                     switch (packet.Command)
                     {
                         // On Server Setup
@@ -259,7 +258,8 @@ namespace Chaos.Mod.Controllers
                             return;
                         case EffectCommand.Start:
                             _sapi.SendIngameDiscovery(player, null, effect.Title());
-                            _sapi.World.PlaySoundAt(new AssetLocation("sounds/effect/deepbell"), player.Entity, null, false, 32f, 0.5f);
+                            _sapi.World.PlaySoundAt(new AssetLocation("sounds/effect/deepbell"), player.Entity, null,
+                                false, 32f, 0.5f);
                             effect.OnServerStart(player, _sapi);
                             if (effect.Duration is EffectDuration.Instant) return;
                             effect.Running = true;
@@ -296,9 +296,7 @@ namespace Chaos.Mod.Controllers
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
-
                 });
-            }
         }
     }
 }

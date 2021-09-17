@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Chaos.Engine.Attributes;
-using Chaos.Engine.Enums;
+﻿using Chaos.Engine.Enums;
 using Chaos.Engine.Primitives;
 using VintageMods.Core.Extensions;
 using VintageMods.Core.Reflection;

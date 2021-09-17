@@ -1,5 +1,4 @@
 ﻿using Chaos.Engine.Contracts.Controllers;
-using VintageMods.Core.Extensions;
 using VintageMods.Core.Helpers;
 using Vintagestory.Client.NoObf;
 

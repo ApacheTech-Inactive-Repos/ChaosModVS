@@ -1,5 +1,4 @@
 ﻿using Chaos.Engine.Contracts.Controllers;
-using Chaos.Engine.Primitives;
 
 namespace Chaos.Engine.Controllers
 {

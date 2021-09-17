@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Chaos.Engine.Contracts.Controllers;
 using Chaos.Engine.Network.Messages;
 using VintageMods.Core.Extensions;
+using VintageMods.Core.Helpers;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 using Vintagestory.GameContent;
@@ -11,7 +12,6 @@ namespace Chaos.Engine.Controllers
 {
     public class ServerGameworldController : IServerGameworldController, IGameworldController
     {
-
         public void CreateExplosion(ExplosionData e)
         {
             Native_CreateExplosion(e);
@@ -36,12 +36,12 @@ namespace Chaos.Engine.Controllers
                 }
             }
 
-            var cachedCubicShellNormalizedVectors = TryGetCachedCubicShellNormalizedVectors((int)num);
+            var cachedCubicShellNormalizedVectors = TryGetCachedCubicShellNormalizedVectors((int) num);
 
             var num2 = 0.800000011920929 * data.DestructionRadius;
             var num3 = 0.4000000059604645 * data.DestructionRadius;
             var blockPos = new BlockPos();
-            var num4 = (int)Math.Ceiling(num);
+            var num4 = (int) Math.Ceiling(num);
             var minPos = data.Position.AddCopy(-num4);
             var maxPos = data.Position.AddCopy(num4);
             server?.WorldMap.PrefetchBlockAccess.PrefetchBlocks(minPos, maxPos);
@@ -51,8 +51,8 @@ namespace Chaos.Engine.Controllers
                 SourcePos = data.Position.ToVec3d(),
                 Type = EnumDamageType.BluntAttack
             };
-            var entitiesAround = server?.GetEntitiesAround(data.Position.ToVec3d(), (float)num + 2f, (float)num + 2f,
-                e => e.ShouldReceiveDamage(testSrc, (float)data.InjureRadius));
+            var entitiesAround = server?.GetEntitiesAround(data.Position.ToVec3d(), (float) num + 2f, (float) num + 2f,
+                e => e.ShouldReceiveDamage(testSrc, (float) data.InjureRadius));
             var dictionary = new Dictionary<long, double>();
             var explosionSmokeParticles = new ExplosionSmokeParticles
             {
@@ -72,8 +72,9 @@ namespace Chaos.Engine.Controllers
                     var num7 = Math.Max(val, data.InjureRadius);
                     for (var num8 = 0.0; num8 < num7; num8 += 0.25)
                     {
-                        blockPos.Set(data.Position.X + (int)(t.X * num8 + 0.5), data.Position.Y + (int)(t.Y * num8 + 0.5),
-                            data.Position.Z + (int)(t.Z * num8 + 0.5));
+                        blockPos.Set(data.Position.X + (int) (t.X * num8 + 0.5),
+                            data.Position.Y + (int) (t.Y * num8 + 0.5),
+                            data.Position.Z + (int) (t.Z * num8 + 0.5));
                         num5 -= 0.25;
                         num6 -= 0.25;
                         if (!dictionary2.ContainsKey(blockPos))
@@ -133,7 +134,7 @@ namespace Chaos.Engine.Controllers
                         Type = EnumDamageType.BluntAttack,
                         SourcePos = new Vec3d(data.Position.X + 0.5, data.Position.Y, data.Position.Z + 0.5)
                     };
-                    entity2.ReceiveDamage(damageSource, (float)damage);
+                    entity2.ReceiveDamage(damageSource, (float) damage);
                 }
 
                 explosionSmokeParticles.AddBlocks(dictionary2);
@@ -143,13 +144,14 @@ namespace Chaos.Engine.Controllers
                     keyValuePair.Value.OnBlockExploded(server, keyValuePair.Key, data.Position, data.BlastType);
                     server.WorldMap.BulkBlockAccess.SetBlock(0, keyValuePair.Key);
                 }
+
                 server.WorldMap.BulkBlockAccess.Commit();
                 foreach (var keyValuePair2 in dictionary2)
                     server.TriggerNeighbourBlocksUpdate(keyValuePair2.Key);
             }
 
             server?.PlaySoundAt(data.SoundFile, data.Position.X, data.Position.Y, data.Position.Z, null, false,
-                (float)(24.0 * Math.Pow(data.DestructionRadius, 0.25)));
+                (float) (24.0 * Math.Pow(data.DestructionRadius, 0.25)));
             if (data.SmokeClouds) server?.SpawnParticles(explosionSmokeParticles);
             var explosionFireParticles = ExplosionParticles.ExplosionFireParticles;
             explosionFireParticles.MinPos.Set(data.Position.X, data.Position.Y, data.Position.Z);
@@ -167,6 +169,5 @@ namespace Chaos.Engine.Controllers
             explosionFireTrailCubicles.LifeLength = NatFloat.createUniform(1.5f, 0.5f);
             server?.SpawnParticles(explosionFireTrailCubicles);
         }
-
     }
 }

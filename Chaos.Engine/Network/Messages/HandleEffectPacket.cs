@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 using ProtoBuf;
-using VintageMods.Core.Extensions;
+using VintageMods.Core.Helpers;
 
 namespace Chaos.Engine.Network.Messages
 {
@@ -35,9 +35,10 @@ namespace Chaos.Engine.Network.Messages
         {
             return new(id, EffectCommand.Start);
         }
+
         public static HandleEffectPacket CreateTickPacket(string id, float dt)
         {
-            return new(id, EffectCommand.Tick) { DeltaTime = dt };
+            return new(id, EffectCommand.Tick) {DeltaTime = dt};
         }
 
         public static HandleEffectPacket CreateStopPacket(string id)

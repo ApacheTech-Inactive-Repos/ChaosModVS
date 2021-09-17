@@ -1,6 +1,6 @@
 ﻿using Chaos.Engine.Primitives;
 using Chaos.Mod.Renderers.Contracts;
-using VintageMods.Core.Extensions;
+using VintageMods.Core.Helpers;
 using Vintagestory.API.Client;
 
 namespace Chaos.Mod.Renderers.Primitives

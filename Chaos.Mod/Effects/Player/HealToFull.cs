@@ -1,5 +1,4 @@
-﻿using Chaos.Engine.Attributes;
-using Chaos.Engine.Enums;
+﻿using Chaos.Engine.Enums;
 using Chaos.Engine.Primitives;
 using Vintagestory.API.Server;
 using Vintagestory.GameContent;
@@ -32,7 +31,6 @@ namespace Chaos.Mod.Effects.Player
             var health = player.Entity.GetBehavior<EntityBehaviorHealth>();
             health.Health = health.MaxHealth;
             health.MarkDirty();
-
         }
     }
 }

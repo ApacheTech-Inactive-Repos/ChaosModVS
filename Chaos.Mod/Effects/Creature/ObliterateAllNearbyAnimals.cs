@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Chaos.Engine.Enums;
+﻿using Chaos.Engine.Enums;
 using Chaos.Engine.Network.Messages;
 using Chaos.Engine.Primitives;
 using JetBrains.Annotations;
@@ -19,11 +18,11 @@ namespace Chaos.Mod.Effects.Creature
         public override void OnServerStart(IServerPlayer player, ICoreServerAPI sapi)
         {
             base.OnServerStart(player, sapi);
-            var blacklist = Settings["Blacklist"].AsArray(new[] { "butterfly", "beemob" });
-            var creatures = ChaosApi.Server.Creatures.GetAllNearbyCreatures(player.Entity.Pos.AsBlockPos, Settings["ScanRadius"].AsInt(25), blacklist);
+            var blacklist = Settings["Blacklist"].AsArray(new[] {"butterfly", "beemob"});
+            var creatures = ChaosApi.Server.Creatures.GetAllNearbyCreatures(player.Entity.Pos.AsBlockPos,
+                Settings["ScanRadius"].AsInt(25), blacklist);
 
             foreach (var creature in creatures)
-            {
                 ChaosApi.Server.World.CreateExplosion(new ExplosionData
                 {
                     Position = creature.Pos.AsBlockPos,
@@ -35,7 +34,6 @@ namespace Chaos.Mod.Effects.Creature
                     PlayerDamage = Settings["PlayerDamage"].AsFloat(5f),
                     SuppressItemDrops = Settings["SuppressItemDrops"].AsBool()
                 });
-            }
         }
     }
 }

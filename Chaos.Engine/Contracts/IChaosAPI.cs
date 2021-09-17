@@ -1,5 +1,4 @@
-﻿using Chaos.Engine.Contracts.Controllers;
-using Vintagestory.API.Datastructures;
+﻿using Vintagestory.API.Datastructures;
 
 namespace Chaos.Engine.Contracts
 {

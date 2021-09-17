@@ -1,6 +1,5 @@
 ﻿using Chaos.Engine.Enums;
 using Chaos.Engine.Primitives;
-using VintageMods.Core.Extensions;
 using Vintagestory.API.Client;
 using Vintagestory.Client.NoObf;
 

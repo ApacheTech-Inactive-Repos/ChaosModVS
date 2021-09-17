@@ -1,7 +1,7 @@
 ﻿using Chaos.Mod.Renderers.Contracts;
 using Chaos.Mod.Renderers.Enums;
 using JetBrains.Annotations;
-using VintageMods.Core.Extensions;
+using VintageMods.Core.Helpers;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.Client.NoObf;
