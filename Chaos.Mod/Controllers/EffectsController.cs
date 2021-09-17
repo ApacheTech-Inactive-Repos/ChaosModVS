@@ -1,153 +1,304 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using AutoMapper.Configuration.Conventions;
 using Chaos.Engine.API;
-using Chaos.Engine.Attributes;
 using Chaos.Engine.Contracts;
+using Chaos.Engine.Effects;
+using Chaos.Engine.Enums;
 using Chaos.Engine.Extensions;
 using Chaos.Engine.Network.Messages;
 using Chaos.Engine.Primitives;
-using Chaos.Engine.Systems;
 using Chaos.Mod.Extensions;
-using HarmonyLib;
 using VintageMods.Core.Extensions;
-using VintageMods.Core.IO;
-using VintageMods.Core.IO.Extensions;
+using VintageMods.Core.Helpers;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
-using Vintagestory.API.Datastructures;
 using Vintagestory.API.Server;
 
 namespace Chaos.Mod.Controllers
 {
-    // HACK: This class is currently tightly coupled to the ModSystem. Further refactoring must be done.
-
     public class EffectsController
     {
-        private readonly IChaosAPI _chaosApi;
+        private ICoreAPI _api;
+        private ICoreClientAPI _capi;
+        private ICoreServerAPI _sapi;
 
-        [Export]
-        private ICoreAPI Api { get; set; }
+        private IChaosAPI ChaosApi { get; }
 
-        [ImportMany("ChaosEffects", typeof(IChaosEffect), AllowRecomposition = true)]
-        private IEnumerable<IChaosEffect> Effects { get; set; }
+        private long _listenerId;
 
-        private IClientNetworkChannel ClientChannel { get; set; }
-        private IServerNetworkChannel ServerChannel { get; set; }
+        private IEnumerable<IChaosEffect> Effects { get; }
 
+        private Dictionary<string, IChaosEffect> RunningEffects { get; } = new();
 
-        public void InitialiseClient(IClientNetworkChannel channel)
+        public EffectsController()
         {
-            ClientChannel ??= channel.RegisterMessageType<HandleEffectPacket>();
+            ChaosApi ??= new ChaosAPI();
+            Effects = GetType().Assembly.GetEnumerableOfType<ChaosEffect>();
+            foreach (var effect in Effects) effect.ChaosApi = ChaosApi;
+        }
+
+        public void InitialiseClient(ICoreClientAPI capi)
+        {
+            _api = _capi = capi;
+            NetworkEx.Client.RegisterMessageType<HandleEffectPacket>();
+        }
+
+        public void InitialiseServer(ICoreServerAPI sapi)
+        {
+            _api = _sapi = sapi;
+            NetworkEx.Server.RegisterMessageType<HandleEffectPacket>()
+                .SetMessageHandler<HandleEffectPacket>((_, packet) => HandleEffect(packet));
         }
 
         public void StartExecuteClient(string id)
         {
-            var effect = Effects.FirstOrDefault(p => p.Id == id);
-            if (effect is null) return;
-
-
-            var async = (Api as ICoreClientAPI).GetVanillaClientSystem<ClientSystemChaosMod>();
-
-            async.EnqueueAsyncTask(() =>
-            {
-                ClientChannel.SendPacket(new HandleEffectPacket(id));
-                effect.OnClientStart(Api as ICoreClientAPI);
-            });
+            if (_api.Side.IsServer()) return;
+            if (Effects.All(p => p.Id != id)) return;
+            AsyncEx.Client.EnqueueAsyncTask(() =>
+                HandleEffect(HandleEffectPacket.CreateSetupPacket(id)));
         }
 
-        public void InitialiseServer(IServerNetworkChannel channel)
+        private void HandleEffect(HandleEffectPacket packet)
         {
-            ServerChannel ??= channel
-                .RegisterMessageType<HandleEffectPacket>()
-                .SetMessageHandler<HandleEffectPacket>(StartExecuteServer);
-        }
+            // First Use: Client Setup Packet.
 
-        private void StartExecuteServer(IServerPlayer player, HandleEffectPacket packet)
-        {
+            // ============================================================
+
+            // On Client Setup
+            //  - Set player for effect.
+            //  - OnClientSetup()               CLIENT SETUP
+            //  - Send Setup Packet.            SEND SERVER SETUP PACKET
+
+            // On Client Start
+            //  - OnClientStart()               CLIENT START
+            //  - Send Start Packet.            SEND SERVER START PACKET
+            //  - Running = true;
+            //  - Add as running effect.
+            //  - If Effect is not Instant, Set Tick Timer
+
+            // On Client Tick
+            //  - Has time elapsed?
+            //  - No
+            //      - OnClientTick()            CLIENT TICK
+            //      - Send Tick Packet.         SEND SERVER TICK PACKET
+            //  - Yes
+            //      - Unregister listener
+            //      - HandleEffect(stop)
+
+            // On Client Stop
+            //  - OnClientStop()                CLIENT STOP
+            //  - Send Stop Packet.             SEND SERVER STOP PACKET
+            //  - Running = false;
+            //  - Remove as running effect.
+
+            // On Client TakeDown
+            //  - OnClientTakeDown()            CLIENT TAKEDOWN
+            //  - Send Stop Packet.             SEND SERVER TAKEDOWN PACKET
+
+            // ============================================================
+
+            // On Server Setup
+            //  - Set player for effect.
+            //  - OnServerSetup()               SERVER SETUP
+
+            // On Server Start
+            //  - Notify player of Effect.
+            //  - OnServerStart()               SERVER START
+            //  - Running = true;
+            //  - Add as running effect.
+
+            // On Server Tick
+            //  - OnServerTick()                SERVER TICK
+
+            // On Server Stop
+            //  - OnServerStop()                SERVER STOP
+            //  - Running = false;
+            //  - Remove as running effect.
+
+            // On Server TakeDown
+            //  - OnServerTakeDown()            SERVER TAKEDOWN
+
+            // ============================================================
+
             var effect = Effects.FirstOrDefault(p => p.Id == packet.EffectId);
-            if (effect is null) return;
+            if (effect == null) return;
 
-            var async = (Api as ICoreServerAPI).GetVanillaServerSystem<ServerSystemChaosMod>();
-            async.EnqueueAsyncTask(() =>
+            effect.Settings = ChaosModConfig.LoadSettings(effect);
+
+            if (_api.Side.IsClient())
             {
-                effect.OnServerStart(player, Api as ICoreServerAPI);
-            });
+                AsyncEx.Client.EnqueueAsyncTask(() =>
+                {
+                    switch (packet.Command)
+                    {
+                        // On Client Setup
+                        //  - Set player for effect.
+                        //  - OnClientSetup()               CLIENT SETUP
+                        //  - Send Setup Packet.            SEND SERVER SETUP PACKET
+                        case EffectCommand.Setup when effect.Running:
+                            return;
+                        case EffectCommand.Setup:
+                            effect.Player = _capi.World.Player;
+                            effect.OnClientSetup(_capi);
+                            NetworkEx.Client.SendPacket(packet);
+                            HandleEffect(HandleEffectPacket.CreateStartPacket(effect.Id));
+                            break;
 
-            player.SendMessage(effect.Title());
-            player.SendMessage(effect.Description());
-        }
+                        // On Client Start
+                        //  - Set StartTick
+                        //  - OnClientStart()               CLIENT START
+                        //  - Send Start Packet.            SEND SERVER START PACKET
+                        //  - Running = true;
+                        //  - Add as running effect.
+                        //  - If Effect is not Instant, Set Tick Timer
+                        case EffectCommand.Start when effect.Running:
+                            return;
+                        case EffectCommand.Start:
+                            effect.StartTick = _capi.InWorldEllapsedMilliseconds;
+                            effect.OnClientStart(_capi);
+                            NetworkEx.Client.SendPacket(HandleEffectPacket.CreateStartPacket(effect.Id));
+                            if (effect.Duration is EffectDuration.Instant) return;
+                            effect.Running = true;
+                            RunningEffects.Add(effect.Id, effect);
+                            _capi.Event.EnqueueMainThreadTask(() =>
+                            {
+                                _listenerId = _capi.Event.RegisterGameTickListener(
+                                    dt => { HandleEffect(HandleEffectPacket.CreateTickPacket(effect.Id, dt)); },
+                                    ChaosApi.GlobalConfig["EffectTickInterval"].AsInt(20));
+                            }, "");
+                            break;
 
-        public EffectsController(ICoreAPI api)
-        {
-            Api ??= api;
-            _chaosApi ??= new ChaosAPI(api);
-            Effects = GetType().Assembly.GetEnumerableOfType<ChaosEffect>();
-            foreach (var effect in Effects)
+                        // On Client Tick
+                        //  - Has time elapsed?
+                        //  - Yes
+                        //      - Unregister listener
+                        //      - HandleEffect(stop)
+                        //  - No
+                        //      - OnClientTick()            CLIENT TICK
+                        //      - Send Tick Packet.         SEND SERVER TICK PACKET
+                        case EffectCommand.Tick when !effect.Running:
+                            return;
+                        case EffectCommand.Tick:
+                            var elapsed = (_capi.InWorldEllapsedMilliseconds - effect.StartTick) / 1000;
+                            var duration = effect.Duration switch
+                            {
+                                EffectDuration.Instant => 0,
+                                EffectDuration.Short => ChaosApi.GlobalConfig["EffectDuration"]["Short"].AsInt(30),
+                                EffectDuration.Standard => ChaosApi.GlobalConfig["EffectDuration"]["Standard"].AsInt(60),
+                                EffectDuration.Long => ChaosApi.GlobalConfig["EffectDuration"]["Long"].AsInt(120),
+                                EffectDuration.Permanent => int.MaxValue,
+                                EffectDuration.Custom => ChaosApi.GlobalConfig["CustomDurations"][effect.Pack][$"{effect.EffectType}"][effect.Id].AsInt(30),
+                                _ => throw new ArgumentOutOfRangeException()
+                            };
+                            if (elapsed >= duration)
+                            {
+                                AsyncEx.Client.EnqueueMainThreadTask(() =>
+                                {
+                                    _capi.Event.UnregisterGameTickListener(_listenerId);
+                                });
+                                HandleEffect(HandleEffectPacket.CreateStopPacket(effect.Id));
+                            }
+                            else
+                            {
+                                effect.OnClientTick(packet.DeltaTime);
+                                NetworkEx.Client.SendPacket(packet);
+                            }
+                            break;
+
+                        // On Client Stop
+                        //  - OnClientStop()                CLIENT STOP
+                        //  - Send Stop Packet.             SEND SERVER STOP PACKET
+                        //  - Running = false;
+                        //  - Remove as running effect.
+                        case EffectCommand.Stop when !effect.Running:
+                            return;
+                        case EffectCommand.Stop:
+                            effect.OnClientStop();
+                            NetworkEx.Client.SendPacket(HandleEffectPacket.CreateStopPacket(effect.Id));
+                            effect.Running = false;
+                            RunningEffects.Remove(effect.Id);
+                            break;
+
+                        // On Client TakeDown
+                        //  - OnClientTakeDown()            CLIENT TAKEDOWN
+                        //  - Send Stop Packet.             SEND SERVER TAKEDOWN PACKET
+                        case EffectCommand.TakeDown when effect.Running:
+                            return;
+                        case EffectCommand.TakeDown:
+                            break;
+
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                });
+            }
+
+            if (_api.Side.IsServer())
             {
-                effect.Api = api;
-                effect.ChaosApi = _chaosApi;
-                // TODO: Any other effect initialisation logic goes here.
+                AsyncEx.Server.EnqueueAsyncTask(() =>
+                {
+                    var player = (IServerPlayer)_sapi.World.PlayerByUid(packet.PlayerUID);
+                    switch (packet.Command)
+                    {
+                        // On Server Setup
+                        //  - Set player for effect.
+                        //  - OnServerSetup()               SERVER SETUP
+                        case EffectCommand.Setup when effect.Running:
+                            return;
+                        case EffectCommand.Setup:
+                            effect.Player = _sapi.World.PlayerByUid(packet.PlayerUID);
+                            break;
+
+                        // On Server Start
+                        //  - Notify player of Effect.
+                        //  - OnServerStart()               SERVER START
+                        //  - Running = true;
+                        //  - Add as running effect.
+                        case EffectCommand.Start when effect.Running:
+                            return;
+                        case EffectCommand.Start:
+                            _sapi.SendIngameDiscovery(player, null, effect.Title());
+                            _sapi.World.PlaySoundAt(new AssetLocation("sounds/effect/deepbell"), player.Entity, null, false, 32f, 0.5f);
+                            effect.OnServerStart(player, _sapi);
+                            if (effect.Duration is EffectDuration.Instant) return;
+                            effect.Running = true;
+                            RunningEffects.Add(effect.Id, effect);
+                            break;
+
+                        // On Server Tick
+                        //  - OnServerTick()                SERVER TICK
+                        case EffectCommand.Tick when !effect.Running:
+                            return;
+                        case EffectCommand.Tick:
+                            effect.OnServerTick(packet.DeltaTime);
+                            break;
+
+                        // On Server Stop
+                        //  - OnServerStop()                SERVER STOP
+                        //  - Running = false;
+                        //  - Remove as running effect.
+                        case EffectCommand.Stop when !effect.Running:
+                            return;
+                        case EffectCommand.Stop:
+                            effect.OnServerStop();
+                            effect.Running = false;
+                            RunningEffects.Remove(effect.Id);
+                            break;
+
+                        // On Server TakeDown
+                        //  - OnServerTakeDown()            SERVER TAKEDOWN
+                        case EffectCommand.TakeDown when effect.Running:
+                            return;
+                        case EffectCommand.TakeDown:
+                            break;
+
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+
+                });
             }
         }
-
-        private void ComposeEffects()
-        {
-            var cat = new AggregateCatalog();
-
-            //? A lot of this will need to be refactored out, and handled globally, by the ChaosAPI.
-            //? Maybe, even extending the FileManager class to handle watched Directories as well.
-
-#if DEBUG
-            var packPath = Path.GetFullPath(@"C:\Users\Apache\source\repos\ChaosModVS\.effects");
-#else
-            var packPath = Path.Combine(GamePaths.DataPath, "ChaosMod", "Packs");
-#endif
-            Directory.CreateDirectory(packPath);
-            cat.Catalogs.Add(new AssemblyCatalog(GetType().Assembly));
-            cat.Catalogs.Add(new AssemblyCatalog(typeof(ChaosAPI).Assembly));
-            cat.Catalogs.Add(new DirectoryCatalog(packPath!));
-            var container = new CompositionContainer(cat);
-
-            foreach (var assembly in container.GetAssembliesWithExports())
-            {
-                ResourceManager.DisembedAssets(assembly);
-            }
-
-            container.ComposeParts(this);
-        }
     }
-
-    public static class AssemblyEx
-    {
-        public static IEnumerable<T> GetEnumerableOfType<T>(this Assembly assembly, params object[] constructorArgs) where T : class, IComparable<T>
-        {
-            var objects = assembly
-                .GetTypes()
-                .Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(T)))
-                .Select(type => (T) Activator.CreateInstance(type, constructorArgs))
-                .ToList();
-            objects.Sort();
-
-            return objects;
-        }
-
-        public static IEnumerable<Type> GetDerivedTypes<T>(this T attribute, Assembly assembly) where T : Attribute
-        {
-            return assembly.GetTypes()
-                .Where(type => type.GetCustomAttributes(typeof(T), true).Length > 0);
-        }
-
-        public static IEnumerable<Type> GetTypesWithAttribute<T>(this Assembly assembly)
-        {
-            return assembly.GetTypes()
-                .Where(type => type.GetCustomAttributes(typeof(T), true).Length > 0);
-        }
-    }
-
 }

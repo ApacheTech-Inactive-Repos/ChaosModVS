@@ -20,7 +20,7 @@ namespace Chaos.Mod.Effects.Shader
             ClientSettings.BrightnessLevel = 20f;
             ClientSettings.AmbientBloomLevel = 100;
             ClientSettings.Bloom = true;
-            capi.Event.EnqueueMainThreadTask(() => capi.Shader.ReloadShaders(), "");
+            ChaosApi.Client.Shaders.ReloadShaders();
         }
 
         public override void OnClientStop()
@@ -31,7 +31,7 @@ namespace Chaos.Mod.Effects.Shader
             ClientSettings.GammaLevel = 2.2f;
             ClientSettings.ExtraGammaLevel = 1f;
             ClientSettings.Bloom = _prevBloom;
-            Api.ForClient().Event.EnqueueMainThreadTask(() => Api.ForClient().Shader.ReloadShaders(), "");
+            ChaosApi.Client.Shaders.ReloadShaders();
         }
     }
 }

@@ -13,8 +13,10 @@ namespace Chaos.Mod.Effects.Weather
         public override void OnServerStart(IServerPlayer player, ICoreServerAPI sapi)
         {
             base.OnServerStart(player, sapi);
-            sapi.ModLoader.GetModSystem<SystemTemporalStability>()
-                .StormData.nextStormTotalDays = sapi.World.Calendar.TotalDays;
+            var system = sapi.ModLoader.GetModSystem<SystemTemporalStability>();
+            system.StormData.nextStormStrength = EnumTempStormStrength.Heavy;
+            system.StormData.nextStormStrDouble = 1000;
+            system.StormData.nextStormTotalDays = sapi.World.Calendar.TotalDays;
         }
     }
 }

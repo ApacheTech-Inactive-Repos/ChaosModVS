@@ -9,7 +9,7 @@ using Vintagestory.API.Server;
 namespace Chaos.Mod.Effects.Player
 {
     [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
-    public sealed class NuclearExplosion : ChaosEffect
+    public sealed class ThermonuclearHandGrenade : ChaosEffect
     {
         public override EffectType EffectType => EffectType.Player;
 
@@ -18,6 +18,7 @@ namespace Chaos.Mod.Effects.Player
         public override void OnServerStart(IServerPlayer player, ICoreServerAPI sapi)
         {
             base.OnServerStart(player, sapi);
+            //TODO: Spawn ore bomb in players hand - 7 second fuse.
             ChaosApi.Server.World.CreateExplosion(new ExplosionData
             {
                 Position = player.Entity.Pos.AsBlockPos,

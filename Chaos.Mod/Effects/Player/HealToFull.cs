@@ -6,7 +6,6 @@ using Vintagestory.GameContent;
 
 namespace Chaos.Mod.Effects.Player
 {
-    [ChaosEffect]
     public class HealToFull : ChaosEffect
     {
         public override EffectType EffectType => EffectType.Player;

@@ -11,17 +11,25 @@
 		<None Remove="assets\chaosmod\config\global-config.json" />
 		<None Remove="assets\chaosmod\lang\effects\default\en.json" />
 		<None Remove="assets\chaosmod\lang\en.json" />
+		<None Remove="assets\chaosmod\patches\survival-entities-land-drifter.json" />
 		<None Remove="assets\chaosmod\patches\survival-shapes-entity-land-drifter-deerhorn.json" />
 		<None Remove="assets\chaosmod\patches\survival-shapes-entity-land-drifter-knife.json" />
 		<None Remove="assets\chaosmod\patches\survival-shapes-entity-land-drifter-spiked1.json" />
 		<None Remove="assets\chaosmod\patches\survival-shapes-entity-land-drifter-spiked2.json" />
 		<None Remove="assets\chaosmod\patches\survival-shapes-entity-land-drifter-surface.json" />
+		<None Remove="assets\chaosmod\shaderincludes\colour-util.ash" />
+		<None Remove="assets\chaosmod\shaderincludes\maths-util.ash" />
+		<None Remove="assets\chaosmod\shaders\colour-overlay.fsh" />
+		<None Remove="assets\chaosmod\shaders\colour-overlay.vsh" />
 		<None Remove="assets\chaosmod\sounds\effects\obliterate.ogg" />
 		<None Remove="modinfo.json" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Content Include="assets\chaosmod\lang\en.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="assets\chaosmod\patches\survival-entities-land-drifter.json">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 		<Content Include="assets\chaosmod\patches\survival-shapes-entity-land-drifter-deerhorn.json">
@@ -37,6 +45,18 @@
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 		<Content Include="assets\chaosmod\patches\survival-shapes-entity-land-drifter-surface.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="assets\chaosmod\shaderincludes\maths-util.ash">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="assets\chaosmod\shaderincludes\colour-util.ash">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="assets\chaosmod\shaders\colour-overlay.fsh">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="assets\chaosmod\shaders\colour-overlay.vsh">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 		<Content Include="modinfo.json">

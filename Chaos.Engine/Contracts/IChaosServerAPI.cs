@@ -1,19 +1,13 @@
-﻿using Chaos.Engine.Controllers;
+﻿using Chaos.Engine.Contracts.Controllers;
 
 namespace Chaos.Engine.Contracts
 {
-    public interface IChaosServerAPI : IHasServerAccess
+    public interface IChaosServerAPI
     {
-        BlockController.ServerSide Blocks { get; }
-        CreatureController.ServerSide Creatures { get; }
-        EntityController.ServerSide Entities { get; }
-        ItemController.ServerSide Items { get; }
-        MetaController.ServerSide Meta { get; }
-        NetworkController.ServerSide Network { get; }
-        PlayerController.ServerSide Player { get; }
-        ShaderController.ServerSide Shaders { get; }
-        TimeController.ServerSide Time { get; }
-        WeatherController.ServerSide Weather { get; }
-        GameworldController.ServerSide World { get; }
+        IServerCreatureController Creatures { get; }
+        IServerGameworldController World { get; }
+        IServerMetaController Meta { get; }
+        IServerShaderController Shaders { get; }
+        IServerEntityController Entities { get; }
     }
 }

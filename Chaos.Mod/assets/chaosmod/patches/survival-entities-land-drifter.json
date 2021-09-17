@@ -1,0 +1,16 @@
+[
+  {
+    "op": "add",
+    "path": "/server/behaviors/8/aitasks/-",
+    "value": {
+      "code": "dance",
+      "priority": 1000,
+      "priorityForCancel": 0,
+      "cancelOnHurt": false,
+      "animation": "dance",
+      "animationSpeed": 1.1,
+      "active": false
+    },
+    "file": "entities/land/drifter.json"
+  }
+]

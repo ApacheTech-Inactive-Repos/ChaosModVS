@@ -1,16 +1,55 @@
 {
   // =========================================================
+  //  Block Effects 
+  // =========================================================
+  "Block": {
+    "Effect": {
+    }
+  },
+
+  // =========================================================
   //  Creature Effects 
   // =========================================================
 
   "Creature": {
+    "AllNearbyDriftersDance": {
+    },
+
     "ObliterateAllNearbyAnimals": {
+      "Blacklist": ["beesmob", "butterfly"],
       "BlastType": "OreBlast",
       "DestructionRadius": 6.0,
       "InjureRadius": 12.0,
       "PlayerDamage": 5,
       "SmokeClouds": true,
       "SuppressItemDrops": false
+    },
+
+    "YeetAllNearbyCreatures": {
+      "Blacklist": ["beesmob", "butterfly"],
+      "Force": 2.5
+    }
+  },
+
+  // =========================================================
+  //  Item Effects 
+  // =========================================================
+
+  "Item": {
+    "Effect": {
+    }
+  },
+
+  // =========================================================
+  //  Meta Effects 
+  // =========================================================
+
+  "Meta": {
+    "NoChaos": {
+      "Duration": 300
+    },
+
+    "Effect": {
     }
   },
 
@@ -19,6 +58,9 @@
   // =========================================================
 
   "Misc": {
+    "Nothing": {
+    },
+
     "QuakeProFOV": {
       "FieldOfView": 150
     },
@@ -26,10 +68,60 @@
     "ZoomZoomCam": {
       "MinFieldOfView": 30,
       "MaxFieldOfView": 150
+    }
+  },
+
+  // =========================================================
+  //  Player Effects 
+  // =========================================================
+
+  "Player": {
+    "ThermonuclearHandGrenade": {
+      "BlastType": "OreBlast",
+      "DestructionRadius": 85.0,
+      "InjureRadius": 85.0,
+      "PlayerDamage": 10,
+      "SmokeClouds": true,
+      "SuppressItemDrops": true,
+      "FuseLength": 7
     },
 
-    "SpinningCamera": {
-      "Speed": 1
+    "Yeet": {
+      "Force": 2.5
+    }
+  },
+
+  // =========================================================
+  //  Shader Effects 
+  // =========================================================
+
+  "Shader": {
+    "DeepFried": {
+    },
+
+    "NightVision": {
+      "Intensity": 8,
+      "Brightness": 8
+    }
+  },
+
+  // =========================================================
+  //  Time Effects 
+  // =========================================================
+
+  "Time": {
+    "Effect": {
+    }
+  },
+
+  // =========================================================
+  //  Weather Effects 
+  // =========================================================
+
+  "Weather": {
+    "StartTemporalStorm": {
+      "MinStormStrength": 6.6,
+      "MaxStormStrength": 9.9
     }
   }
 }

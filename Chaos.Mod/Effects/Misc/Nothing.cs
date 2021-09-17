@@ -9,7 +9,3 @@ namespace Chaos.Mod.Effects.Misc
         public override EffectDuration Duration => EffectDuration.Instant;
     }
 }
-
-namespace Chaos.Mod.Effects.Weather
-{
-}

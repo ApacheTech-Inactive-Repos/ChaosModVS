@@ -1,9 +1,42 @@
 {
-  "EffectTickInterval": 20, 
+  /***
+   * The interval, im milliseconds, between each effects tick.
+   *
+   * Default: 20ms.
+   */
+  "EffectTickInterval": 20,
+
+  /***
+   * The interval, in seconds, between each effect being triggered.
+   *
+   * Default: 60s.
+   */
   "EffectInterval": 60,
+
+  /***
+   * The interval, in seconds, between each meta effect being triggered.
+   *
+   * Default: 900s (15m).
+   */
+  "MetaEffectInterval": 900,
+
+  /***
+   * The time, in seconds, that each type of effect lasts.
+   *
+   * Defaults: Short (30s), Standard (60s), Long (180s).
+   */
   "EffectDuration": {
     "Short": 30,
     "Standard": 60,
     "Long": 180
+  },
+
+  /***
+   * Effects within this list will have their duration overridden.
+   *
+   * Format: "Pack.EffectType.EffectId" : ## (seconds)
+   */
+  "CustomEffectDuration": {
+    "Default.Misc.Nothing": 45
   }
 }

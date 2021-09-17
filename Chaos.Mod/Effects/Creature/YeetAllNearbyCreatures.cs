@@ -1,9 +1,11 @@
 ﻿using Chaos.Engine.Enums;
 using Chaos.Engine.Primitives;
+using JetBrains.Annotations;
 using Vintagestory.API.Server;
 
 namespace Chaos.Mod.Effects.Creature
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     public class YeetAllNearbyCreatures : ChaosEffect
     {
         public override EffectType EffectType => EffectType.Creature;

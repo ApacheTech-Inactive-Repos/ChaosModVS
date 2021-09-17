@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using Chaos.Engine.API;
 using Chaos.Engine.Contracts;
-using Chaos.Engine.Effects;
 using Chaos.Engine.Enums;
 using JetBrains.Annotations;
 using Vintagestory.API.Client;
@@ -17,19 +14,15 @@ namespace Chaos.Engine.Primitives
     ///     Acts as a base class for all Chaos Mod effects.
     /// </summary>
     /// <remarks>
-    ///     Effects are run on a separate EffectsRunner thread, and so care must be taken when writing effects, to ensure that
-    ///     tasks that need to be run on the MainUI thread, such as sending chat messages, or running OpenGL scripts, must be
-    ///     passed to the Main Thread using `ChaosApi.ExecuteOnMainThread(System.Action action, System.String identifier)`.
-    ///     It's also recommended to set a local Watch on the EffectsRunner thread, when debugging.
+    ///     Effects are run on a separate thread, and so care must be taken when writing effects, to ensure that tasks 
+    ///     that need to be run on the MainUI thread, such as sending chat messages, or running OpenGL scripts, must be
+    ///     passed to the Main Thread using `NetworkEx.Client|Server.EnqueueMainThreadTask(System.Action action)`.
     /// </remarks>
     /// <seealso cref="IChaosEffect" />
     /// <seealso cref="IDisposable" />
-    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+    [UsedImplicitly(ImplicitUseTargetFlags.WithInheritors | ImplicitUseTargetFlags.WithMembers)]
     public abstract class ChaosEffect : IChaosEffect, IDisposable, IComparable<ChaosEffect>
     {
-        private long _listenerId;
-        private long _startTick;
-
         /// <summary>
         ///     Initialises a new instance of the <see cref="ChaosEffect" /> class.
         /// </summary>
@@ -38,11 +31,13 @@ namespace Chaos.Engine.Primitives
             Id = GetType().Name;
         }
 
+        #region Metadata
+
         /// <summary>
         ///     Gets the player object.
         /// </summary>
         /// <value>The player.</value>
-        protected IPlayer Player { get; private set; }
+        public IPlayer Player { get; set; }
 
         /// <summary>
         ///     Gets the chaos API.
@@ -54,43 +49,36 @@ namespace Chaos.Engine.Primitives
         ///     Gets the settings for the effect.
         /// </summary>
         /// <value>The settings.</value>
-        protected JsonObject Settings { get; private set; }
-
-        /// <summary>
-        ///     Gets the core Chaos Engine API.
-        /// </summary>
-        /// <value>The core Chaos Engine API.</value>
-        [Import]
-        public ICoreAPI Api { get; set; }
+        public JsonObject Settings { get; set; }
 
         /// <summary>
         ///     Gets a value indicating whether this effect is running.
         /// </summary>
         /// <value><c>true</c> if running; otherwise, <c>false</c>.</value>
-        public bool Running { get; private set; }
+        public bool Running { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating which game tick the effect started on.
+        /// </summary>
+        /// <value><c>true</c> if [start tick]; otherwise, <c>false</c>.</value>
+        public long StartTick { get; set; }
+
+        #endregion
 
         #region Client Methods
 
         /// <summary>
         ///     Called when the effect is first run. Handles client-side responsibilities.
         /// </summary>
+        public virtual void OnClientSetup(ICoreClientAPI capi)
+        {
+        }
+
+        /// <summary>
+        ///     Called when the effect start. Handles client-side responsibilities.
+        /// </summary>
         public virtual void OnClientStart(ICoreClientAPI capi)
         {
-            if (Duration is not EffectDuration.Instant)
-            {
-                _startTick = capi.ElapsedMilliseconds;
-                capi.Event.EnqueueMainThreadTask(
-                    () =>
-                    {
-                        _listenerId = capi.Event.RegisterGameTickListener(OnClientTick,
-                            ChaosApi.GlobalConfig["EffectTickInterval"].AsInt(20));
-                    }, "");
-                Running = true;
-            }
-
-            Settings = ChaosModConfig.LoadSettings(this);
-            ChaosApi = new ChaosAPI(Api);
-            Player = capi.World.Player;
         }
 
         /// <summary>
@@ -99,26 +87,6 @@ namespace Chaos.Engine.Primitives
         /// <param name="dt">The time, in milliseconds, between this method call, and the last method call.</param>
         public virtual void OnClientTick(float dt)
         {
-            var capi = (ICoreClientAPI) Api;
-            var ms = capi.ElapsedMilliseconds - _startTick;
-            var duration = Duration switch
-            {
-                EffectDuration.Instant => 0,
-                EffectDuration.Short => ChaosApi.GlobalConfig["EffectDuration"]["Short"].AsInt(30),
-                EffectDuration.Standard => ChaosApi.GlobalConfig["EffectDuration"]["Standard"].AsInt(60),
-                EffectDuration.Long => ChaosApi.GlobalConfig["EffectDuration"]["Long"].AsInt(120),
-                EffectDuration.Permanent => int.MaxValue,
-                EffectDuration.Custom => ChaosApi.GlobalConfig["CustomDurations"][Pack][$"{EffectType}"][Id].AsInt(30),
-                _ => throw new ArgumentOutOfRangeException()
-            };
-            if (ms >= duration * 1000)
-            {
-                capi.Event.UnregisterGameTickListener(_listenerId);
-                OnClientStop();
-                return;
-            }
-            
-            Running = true;
         }
 
         /// <summary>
@@ -126,7 +94,13 @@ namespace Chaos.Engine.Primitives
         /// </summary>
         public virtual void OnClientStop()
         {
-            Running = false;
+        }
+        
+        /// <summary>
+        ///     Called when the effect is first run. Handles client-side responsibilities.
+        /// </summary>
+        public virtual void OnClientTakeDown(ICoreClientAPI capi)
+        {
         }
 
         #endregion
@@ -138,23 +112,17 @@ namespace Chaos.Engine.Primitives
         /// </summary>
         /// <param name="player">The player that made the request to the server.</param>
         /// <param name="sapi">The server side core game API.</param>
+        public virtual void OnServerSetup(IServerPlayer player, ICoreServerAPI sapi)
+        {
+        }
+
+        /// <summary>
+        ///     Called when the effect is first run. Handles server-side responsibilities.
+        /// </summary>
+        /// <param name="player">The player that made the request to the server.</param>
+        /// <param name="sapi">The server side core game API.</param>
         public virtual void OnServerStart(IServerPlayer player, ICoreServerAPI sapi)
         {
-            if (Duration is not EffectDuration.Instant)
-            {
-                _startTick = sapi.World.ElapsedMilliseconds;
-                sapi.Event.EnqueueMainThreadTask(
-                    () =>
-                    {
-                        _listenerId = sapi.Event.RegisterGameTickListener(OnServerTick,
-                            ChaosApi.GlobalConfig["EffectTickInterval"].AsInt(20));
-                    }, "");
-                Running = true;
-            }
-
-            Settings = ChaosModConfig.LoadSettings(this);
-            ChaosApi = new ChaosAPI(Api);
-            Player = player;
         }
 
         /// <summary>
@@ -163,25 +131,6 @@ namespace Chaos.Engine.Primitives
         /// <param name="dt">The time, in milliseconds, between this method call, and the last method call.</param>
         public virtual void OnServerTick(float dt)
         {
-            var sapi = (ICoreServerAPI) Api;
-            var ms = sapi.World.ElapsedMilliseconds - _startTick;
-            var duration = Duration switch
-            {
-                EffectDuration.Instant => 0,
-                EffectDuration.Short => ChaosApi.GlobalConfig["EffectDuration"]["Short"].AsInt(30),
-                EffectDuration.Standard => ChaosApi.GlobalConfig["EffectDuration"]["Standard"].AsInt(60),
-                EffectDuration.Long => ChaosApi.GlobalConfig["EffectDuration"]["Long"].AsInt(120),
-                EffectDuration.Permanent => int.MaxValue,
-                EffectDuration.Custom => ChaosApi.GlobalConfig["CustomDurations"][Pack][$"{EffectType}"][Id].AsInt(30),
-                _ => throw new ArgumentOutOfRangeException()
-            };
-            if (ms >= duration * 1000)
-            {
-                sapi.Event.UnregisterGameTickListener(_listenerId);
-                OnServerStop();
-                return;
-            }
-            Running = true;
         }
 
         /// <summary>
@@ -189,7 +138,16 @@ namespace Chaos.Engine.Primitives
         /// </summary>
         public virtual void OnServerStop()
         {
-            Running = false;
+        }
+
+
+        /// <summary>
+        ///     Called when the effect ends. Handles server-side responsibilities.
+        /// </summary>
+        /// <param name="player">The player that made the request to the server.</param>
+        /// <param name="sapi">The server side core game API.</param>
+        public virtual void OnServerTakeDown(IServerPlayer player, ICoreServerAPI sapi)
+        {
         }
 
         #endregion

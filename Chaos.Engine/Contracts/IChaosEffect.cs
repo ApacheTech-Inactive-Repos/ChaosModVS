@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Datastructures;
 using Vintagestory.API.Server;
 
 namespace Chaos.Engine.Contracts
@@ -16,7 +17,9 @@ namespace Chaos.Engine.Contracts
         ///     Gets a value indicating whether this effect is running.
         /// </summary>
         /// <value><c>true</c> if running; otherwise, <c>false</c>.</value>
-        bool Running { get; }
+        bool Running { get; set; }
+
+        void OnClientSetup(ICoreClientAPI capi);
 
         /// <summary>
         ///     Called when the effect is first run. Handles client-side responsibilities.
@@ -45,6 +48,10 @@ namespace Chaos.Engine.Contracts
         /// </summary>
         void OnClientStop();
 
+        void OnClientTakeDown(ICoreClientAPI capi);
+
+        void OnServerTakeDown(IServerPlayer player, ICoreServerAPI sapi);
+
         /// <summary>
         ///     Called when the effect has ended. Handles server-side clean-up responsibilities.
         /// </summary>
@@ -54,7 +61,7 @@ namespace Chaos.Engine.Contracts
         ///     Disposes this instance, stopping the effect on both server, and client.
         /// </summary>
         void Dispose();
-
+        void OnServerSetup(IServerPlayer player, ICoreServerAPI sapi);
 
         /// <summary>
         ///     Gets or sets the chaos API.
@@ -63,9 +70,21 @@ namespace Chaos.Engine.Contracts
         IChaosAPI ChaosApi { get; set; }
 
         /// <summary>
-        ///     Gets or sets the core game API.
+        ///     Gets the settings for the effect.
         /// </summary>
-        /// <value>The universally accessible core game API.</value>
-        ICoreAPI Api { get; set; }
+        /// <value>The settings.</value>
+        JsonObject Settings { get; set; }
+
+        /// <summary>
+        ///     The player that acts as the target for the effect.
+        /// </summary>
+        /// <value>A side-agnostic interface of the target Player.</value>
+        IPlayer Player { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating which game tick the effect started on.
+        /// </summary>
+        /// <value><c>true</c> if [start tick]; otherwise, <c>false</c>.</value>
+        public long StartTick { get; set; }
     }
 }
