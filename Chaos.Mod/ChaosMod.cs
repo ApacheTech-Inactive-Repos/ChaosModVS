@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using Chaos.Engine.Systems;
+using Chaos.Mod.Content.Renderers;
+using Chaos.Mod.Content.Renderers.Enums;
+using Chaos.Mod.Content.Renderers.Shaders;
+using Chaos.Mod.Content.Tasks;
 using Chaos.Mod.Controllers;
-using Chaos.Mod.Renderers;
-using Chaos.Mod.Renderers.Enums;
-using Chaos.Mod.Renderers.Shaders;
-using Chaos.Mod.Tasks;
 using VintageMods.Core.Attributes;
 using VintageMods.Core.IO.Enum;
 using VintageMods.Core.ModSystems;
@@ -69,6 +69,94 @@ namespace Chaos.Mod
                 system.StormData.nextStormTotalDays = currentTime;
             });
             AiTaskRegistry.Register<AiTaskDance>("dance");
+        }
+
+        private bool ExecuteCommand(KeyCombination _)
+        {
+            var effects = new Dictionary<string, List<string>>
+            {
+                {
+                    "Block", new()
+                    {
+                        ""
+                    }
+                },
+
+                {
+                    "Creature", new()
+                    {
+                        "AllNearbyDriftersDance",
+                        "ObliterateAllNearbyAnimals",
+                        "ReviveAllNearbyCorpses",
+                        "YeetAllNearbyCreatures"
+                    }
+                },
+
+                {
+                    "Item", new()
+                    {
+                        ""
+                    }
+                },
+
+                {
+                    "Meta", new()
+                    {
+                        ""
+                    }
+                },
+
+                {
+                    "Misc", new()
+                    {
+                        "Nothing",
+                        "QuakeProFOV",
+                        "WhatAustraliaLooksLike",
+                        "ZoomZoomCam"
+                    }
+                },
+
+                {
+                    "Player", new()
+                    {
+                        "Forcefield",
+                        "HealToFull",
+                        "ThermonuclearHandGrenade",
+                        "Yeet"
+                    }
+                },
+
+                {
+                    "Shader", new()
+                    {
+                        "AcidTrip",
+                        "AlienWorld",
+                        "AntiqueStory",
+                        "BlueLightDistrict",
+                        "CatsEyes",
+                        "DeepFried",
+                        "NightVision",
+                        "SeeingRed",
+                        "VSNoire"
+                    }
+                },
+
+                {
+                    "Time", new()
+                    {
+                        ""
+                    }
+                },
+
+                {
+                    "Weather", new()
+                    {
+                        "StartTemporalStorm"
+                    }
+                }
+            };
+            Effects.StartExecuteClient("AcidTrip");
+            return true;
         }
 
         #region Sandbox Methods
@@ -457,19 +545,7 @@ namespace Chaos.Mod
             #endregion
 
             Capi.Input.RegisterHotKey("chaos-boom", "Boom!", GlKeys.ControlRight);
-            Capi.Input.SetHotKeyHandler("chaos-boom", _ =>
-            {
-                var effects = new List<string>
-                {
-                    "DeepFried", "NightVision", "CatsEyes", "NightVisionOld", "AcidTrip", "Yeet",
-                    "StartTemporalStorm", "HealToFull", "ThermonuclearHandGrenade", "Nothing", "QuakeProFOV",
-                    "ZoomZoomCam", "WhatAustraliaLooksLike", "Nothing", "YeetAllNearbyCreatures",
-                    "ReviveAllNearbyCorpses", "ObliterateAllNearbyAnimals", "AllNearbyDriftersDance", "Forcefield",
-                    "VSNoire", "NightVision", "AntiqueStory", "BlueLightDistrict", "SeeingRed", "AlienWorld"
-                };
-                Effects.StartExecuteClient("AcidTrip");
-                return true;
-            });
+            Capi.Input.SetHotKeyHandler("chaos-boom", ExecuteCommand);
         }
 
         #endregion

@@ -1,5 +1,5 @@
-﻿using Chaos.Engine.Enums;
-using Chaos.Engine.Primitives;
+﻿using Chaos.Engine.Effects.Enums;
+using Chaos.Engine.Effects.Primitives;
 using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 

@@ -1,5 +1,7 @@
-﻿using Chaos.Engine.Enums;
-using Chaos.Engine.Primitives;
+﻿using Chaos.Engine.Effects.Enums;
+using Chaos.Engine.Effects.Extensions;
+using Chaos.Engine.Effects.Primitives;
+using VintageMods.Core.Helpers;
 using Vintagestory.API.Client;
 using Vintagestory.Client.NoObf;
 
@@ -10,7 +12,7 @@ namespace Chaos.Mod.Effects.Shader
         private bool _prevBloom;
 
         public override EffectType EffectType => EffectType.Shader;
-        public override EffectDuration Duration => EffectDuration.Standard;
+        public override EffectDuration Duration => EffectDuration.Short;
 
         public override void OnClientStart(ICoreClientAPI capi)
         {
@@ -19,7 +21,7 @@ namespace Chaos.Mod.Effects.Shader
             ClientSettings.BrightnessLevel = 20f;
             ClientSettings.AmbientBloomLevel = 100;
             ClientSettings.Bloom = true;
-            ChaosApi.Client.Shaders.ReloadShaders();
+            capi.Shader.ReloadShadersAsync();
         }
 
         public override void OnClientStop()
@@ -30,7 +32,7 @@ namespace Chaos.Mod.Effects.Shader
             ClientSettings.GammaLevel = 2.2f;
             ClientSettings.ExtraGammaLevel = 1f;
             ClientSettings.Bloom = _prevBloom;
-            ChaosApi.Client.Shaders.ReloadShaders();
+            ApiEx.Client.Shader.ReloadShadersAsync();
         }
     }
 }

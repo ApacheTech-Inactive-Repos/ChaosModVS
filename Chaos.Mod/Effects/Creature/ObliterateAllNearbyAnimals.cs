@@ -1,6 +1,7 @@
-﻿using Chaos.Engine.Enums;
+﻿using Chaos.Engine.Effects.Enums;
+using Chaos.Engine.Effects.Extensions;
+using Chaos.Engine.Effects.Primitives;
 using Chaos.Engine.Network.Messages;
-using Chaos.Engine.Primitives;
 using JetBrains.Annotations;
 using VintageMods.Core.Extensions;
 using Vintagestory.API.Common;
@@ -19,11 +20,11 @@ namespace Chaos.Mod.Effects.Creature
         {
             base.OnServerStart(player, sapi);
             var blacklist = Settings["Blacklist"].AsArray(new[] {"butterfly", "beemob"});
-            var creatures = ChaosApi.Server.Creatures.GetAllNearbyCreatures(player.Entity.Pos.AsBlockPos,
+            var creatures = sapi.World.GetCreaturesAround(player.Entity.Pos.AsBlockPos,
                 Settings["ScanRadius"].AsInt(25), blacklist);
 
             foreach (var creature in creatures)
-                ChaosApi.Server.World.CreateExplosion(new ExplosionData
+                sapi.AsServerMain().CustomExplosion(new CustomExplosionData
                 {
                     Position = creature.Pos.AsBlockPos,
                     BlastType = EnumEx.Parse<EnumBlastType>(Settings["BlastType"].AsString("OreBlast")),

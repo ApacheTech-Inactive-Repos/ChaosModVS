@@ -1,9 +1,9 @@
 ﻿using System;
-using Chaos.Engine.Enums;
-using Chaos.Mod.Renderers;
-using Chaos.Mod.Renderers.Enums;
-using Chaos.Mod.Renderers.Primitives;
-using Chaos.Mod.Renderers.Shaders;
+using Chaos.Engine.Effects.Enums;
+using Chaos.Mod.Content.Renderers;
+using Chaos.Mod.Content.Renderers.Enums;
+using Chaos.Mod.Content.Renderers.Primitives;
+using Chaos.Mod.Content.Renderers.Shaders;
 using Vintagestory.API.Client;
 
 namespace Chaos.Mod.Effects.Shader
@@ -23,8 +23,8 @@ namespace Chaos.Mod.Effects.Shader
 
         protected override void InitialiseShader(OverlayShaderProgram shader)
         {
-            shader.Filter = new Random().NextDouble() > 0.5 
-                ? OverlayColourFilter.Sepia 
+            shader.Filter = new Random().NextDouble() > 0.5
+                ? OverlayColourFilter.Sepia
                 : OverlayColourFilter.Greyscale;
             shader.Intensity = 5f;
             shader.Brightness = 0.5f;

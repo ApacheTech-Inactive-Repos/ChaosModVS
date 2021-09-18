@@ -26,9 +26,9 @@
    * Defaults: Short (30s), Standard (60s), Long (180s).
    */
   "EffectDuration": {
-    "Short": 30,
-    "Standard": 60,
-    "Long": 180
+    "Short": 10,
+    "Standard": 10,
+    "Long": 10
   },
 
   /***

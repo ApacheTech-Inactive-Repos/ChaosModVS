@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Chaos.Engine.Enums;
-using Chaos.Engine.Primitives;
+using Chaos.Engine.Effects.Enums;
+using Chaos.Engine.Effects.Extensions;
+using Chaos.Engine.Effects.Primitives;
 using VintageMods.Core.Helpers;
 
 namespace Chaos.Mod.Effects.Player
@@ -15,7 +16,7 @@ namespace Chaos.Mod.Effects.Player
         {
             AsyncEx.Server.EnqueueAsyncTask(() =>
             {
-                var entities = ChaosApi.Server.Entities.GetAllNearbyEntities(
+                var entities = ApiEx.Server.World.GetEntitiesAround(
                     Player.Entity.ServerPos.AsBlockPos, Settings["ScanDistance"].AsInt(15)).ToList();
                 foreach (var entity in entities)
                 {

@@ -1,5 +1,6 @@
-﻿using Chaos.Engine.Enums;
-using Chaos.Engine.Primitives;
+﻿using Chaos.Engine.Effects.Enums;
+using Chaos.Engine.Effects.Extensions;
+using Chaos.Engine.Effects.Primitives;
 using JetBrains.Annotations;
 using Vintagestory.API.Server;
 
@@ -15,7 +16,7 @@ namespace Chaos.Mod.Effects.Creature
         {
             base.OnServerStart(player, sapi);
             var blacklist = Settings["Blacklist"].AsArray(new[] {"butterfly", "beemob"});
-            var creatures = ChaosApi.Server.Creatures.GetAllNearbyCreatures(
+            var creatures = sapi.World.GetCreaturesAround(
                 Player.Entity.Pos.AsBlockPos, Settings["ScanRadius"].AsInt(25), blacklist);
             foreach (var creature in creatures) creature.ServerPos.Motion.Y = 2.5;
         }

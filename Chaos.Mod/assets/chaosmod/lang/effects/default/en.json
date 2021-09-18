@@ -1,6 +1,7 @@
 {
   "Effects.Default.Creature.ObliterateAllNearbyAnimals.Title": "Obliterate All Nearby Animals",
-  "Effects.Default.Creature.ObliterateAllNearbyAnimals.Description": "All animals within range of the player explode in a fiery ball of death.",
+  "Effects.Default.Creature.ObliterateAllNearbyAnimals.Description":
+    "All animals within range of the player explode in a fiery ball of death.",
 
   "Effects.Default.Misc.QuakeProFOV.Title": "Quake Pro FOV",
   "Effects.Default.Misc.QuakeProFOV.Description": "Increases the Field of View to eye-watering levels.",
@@ -24,19 +25,22 @@
   "Effects.Default.Creature.AllNearbyDriftersDance.Description": "Groovy, baby!",
 
   "Effects.Default.Creature.ReviveAllNearbyCorpses.Title": "Revive All Nearby Corpses",
-  "Effects.Default.Creature.ReviveAllNearbyCorpses.Description": "Any corpses within range of the player are revived, with full health. Ready for Round 2?",
+  "Effects.Default.Creature.ReviveAllNearbyCorpses.Description":
+    "Any corpses within range of the player are revived, with full health. Ready for Round 2?",
 
   "Effects.Default.Player.Yeet.Title": "#yeet",
   "Effects.Default.Player.Yeet.Description": "Launch the player into space.",
 
   "Effects.Default.Shader.AcidTrip.Title": "Acid Trip",
-  "Effects.Default.Shader.AcidTrip.Description": "\"Life is only a dream, and we are the imaginations of ourselves!\" - Bill Hicks.",
+  "Effects.Default.Shader.AcidTrip.Description":
+    "\"Life is only a dream, and we are the imaginations of ourselves!\" - Bill Hicks.",
 
   "Effects.Default.Shader.CatsEyes.Title": "Cats Eyes",
   "Effects.Default.Shader.CatsEyes.Description": "Gives the player sepia vision in the dark.",
 
   "Effects.Default.Shader.NightVision.Title": "Night Vision",
-  "Effects.Default.Shader.NightVision.Description": "Gives the player Night Vision, as if wearing Night Vision goggles.",
+  "Effects.Default.Shader.NightVision.Description":
+    "Gives the player Night Vision, as if wearing Night Vision goggles.",
 
   "Effects.Default.Shader.DeepFried.Title": "Deep Fried",
   "Effects.Default.Shader.DeepFried.Description": "Who turned on the lights?"

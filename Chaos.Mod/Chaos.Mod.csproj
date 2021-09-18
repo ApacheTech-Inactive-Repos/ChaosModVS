@@ -7,6 +7,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="AssetEnum\**" />
+	  <EmbeddedResource Remove="AssetEnum\**" />
+	  <None Remove="AssetEnum\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Remove="assets\chaosmod\config\effects\default\effect-settings.json" />
 		<None Remove="assets\chaosmod\config\global-config.json" />
 		<None Remove="assets\chaosmod\lang\effects\default\en.json" />
@@ -141,9 +147,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="AssetEnum\" />
 	  <Folder Include="Effects\Block\" />
 	  <Folder Include="Effects\Item\" />
+	  <Folder Include="Effects\Meta\" />
 	  <Folder Include="Effects\Time\" />
 	</ItemGroup>
 

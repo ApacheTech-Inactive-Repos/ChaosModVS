@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Chaos.Engine.Enums;
-using Chaos.Engine.Primitives;
-using Chaos.Mod.Tasks;
+using Chaos.Engine.Effects.Enums;
+using Chaos.Engine.Effects.Extensions;
+using Chaos.Engine.Effects.Primitives;
+using Chaos.Mod.Content.Tasks;
 using VintageMods.Core.Extensions;
+using VintageMods.Core.Helpers;
 using VintageMods.Core.Reflection;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
@@ -26,8 +28,8 @@ namespace Chaos.Mod.Effects.Creature
             base.OnServerStart(player, sapi);
 
             _player = player.Entity;
-            _prevDrifters = _currentDrifters = ChaosApi.Server.Creatures
-                .GetAllNearbyCreatures(player.Entity.Pos.AsBlockPos, 25)
+            _prevDrifters = _currentDrifters = sapi.World
+                .GetCreaturesAround(player.Entity.Pos.AsBlockPos, 25)
                 .Where(p => p.Code.Path.Contains("drifter"));
             foreach (var drifter in _currentDrifters) PauseAllTasks(drifter);
         }
@@ -36,7 +38,7 @@ namespace Chaos.Mod.Effects.Creature
         {
             base.OnServerTick(dt);
 
-            _currentDrifters = ChaosApi.Server.Creatures.GetAllNearbyCreatures(_player.Pos.AsBlockPos, 25)
+            _currentDrifters = ApiEx.Server.World.GetCreaturesAround(_player.Pos.AsBlockPos, 25)
                 .Where(p => p.Code.Path.Contains("drifter")).ToList();
 
             // New drifters.
@@ -69,6 +71,7 @@ namespace Chaos.Mod.Effects.Creature
                 ai.StopTask(aiTask.GetType());
                 ai.RemoveTask(aiTask);
             }
+
             ai.GetTask<AiTaskDance>().Active = true;
         }
 

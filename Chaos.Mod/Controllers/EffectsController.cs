@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Chaos.Engine.API;
-using Chaos.Engine.Contracts;
-using Chaos.Engine.Effects;
-using Chaos.Engine.Enums;
+using Chaos.Engine.Effects.Contracts;
+using Chaos.Engine.Effects.Enums;
+using Chaos.Engine.Effects.Extensions;
+using Chaos.Engine.Effects.Primitives;
 using Chaos.Engine.Extensions;
 using Chaos.Engine.Network.Messages;
-using Chaos.Engine.Primitives;
-using Chaos.Mod.Extensions;
 using VintageMods.Core.Helpers;
+using VintageMods.Core.IO.Extensions;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Datastructures;
 using Vintagestory.API.Server;
 
 namespace Chaos.Mod.Controllers
@@ -26,12 +26,11 @@ namespace Chaos.Mod.Controllers
 
         public EffectsController()
         {
-            ChaosApi ??= new ChaosAPI();
             Effects = GetType().Assembly.GetEnumerableOfType<ChaosEffect>();
-            foreach (var effect in Effects) effect.ChaosApi = ChaosApi;
+            foreach (var effect in Effects) effect.GlobalConfig = GlobalConfig;
         }
 
-        private IChaosAPI ChaosApi { get; }
+        public JsonObject GlobalConfig { get; } = ApiEx.Universal.GetModFile("global-config.json").AsRawJsonObject();
 
         private IEnumerable<IChaosEffect> Effects { get; }
 
@@ -40,14 +39,14 @@ namespace Chaos.Mod.Controllers
         public void InitialiseClient(ICoreClientAPI capi)
         {
             _api = _capi = capi;
-            NetworkEx.Client.RegisterMessageType<HandleEffectPacket>();
+            NetworkEx.Client.RegisterMessageType<ChaosEffectPacket>();
         }
 
         public void InitialiseServer(ICoreServerAPI sapi)
         {
             _api = _sapi = sapi;
-            NetworkEx.Server.RegisterMessageType<HandleEffectPacket>()
-                .SetMessageHandler<HandleEffectPacket>((_, packet) => HandleEffect(packet));
+            NetworkEx.Server.RegisterMessageType<ChaosEffectPacket>()
+                .SetMessageHandler<ChaosEffectPacket>((_, packet) => HandleEffect(packet));
         }
 
         public void StartExecuteClient(string id)
@@ -55,10 +54,10 @@ namespace Chaos.Mod.Controllers
             if (_api.Side.IsServer()) return;
             if (Effects.All(p => p.Id != id)) return;
             AsyncEx.Client.EnqueueAsyncTask(() =>
-                HandleEffect(HandleEffectPacket.CreateSetupPacket(id)));
+                HandleEffect(ChaosEffectPacket.CreateSetupPacket(id)));
         }
 
-        private void HandleEffect(HandleEffectPacket packet)
+        private void HandleEffect(ChaosEffectPacket packet)
         {
             // First Use: Client Setup Packet.
 
@@ -123,8 +122,6 @@ namespace Chaos.Mod.Controllers
             var effect = Effects.FirstOrDefault(p => p.Id == packet.EffectId);
             if (effect == null) return;
 
-            effect.Settings = ChaosModConfig.LoadSettings(effect);
-
             if (_api.Side.IsClient())
                 AsyncEx.Client.EnqueueAsyncTask(() =>
                 {
@@ -134,13 +131,13 @@ namespace Chaos.Mod.Controllers
                         //  - Set player for effect.
                         //  - OnClientSetup()               CLIENT SETUP
                         //  - Send Setup Packet.            SEND SERVER SETUP PACKET
-                        case EffectCommand.Setup when effect.Running:
+                        case EffectStage.Setup when effect.Running:
                             return;
-                        case EffectCommand.Setup:
+                        case EffectStage.Setup:
                             effect.Player = _capi.World.Player;
                             effect.OnClientSetup(_capi);
                             NetworkEx.Client.SendPacket(packet);
-                            HandleEffect(HandleEffectPacket.CreateStartPacket(effect.Id));
+                            HandleEffect(ChaosEffectPacket.CreateStartPacket(effect.Id));
                             break;
 
                         // On Client Start
@@ -150,20 +147,20 @@ namespace Chaos.Mod.Controllers
                         //  - Running = true;
                         //  - Add as running effect.
                         //  - If Effect is not Instant, Set Tick Timer
-                        case EffectCommand.Start when effect.Running:
+                        case EffectStage.Start when effect.Running:
                             return;
-                        case EffectCommand.Start:
+                        case EffectStage.Start:
                             effect.StartTick = _capi.InWorldEllapsedMilliseconds;
                             effect.OnClientStart(_capi);
-                            NetworkEx.Client.SendPacket(HandleEffectPacket.CreateStartPacket(effect.Id));
+                            NetworkEx.Client.SendPacket(packet);
                             if (effect.Duration is EffectDuration.Instant) return;
                             effect.Running = true;
                             RunningEffects.Add(effect.Id, effect);
                             _capi.Event.EnqueueMainThreadTask(() =>
                             {
                                 _listenerId = _capi.Event.RegisterGameTickListener(
-                                    dt => { HandleEffect(HandleEffectPacket.CreateTickPacket(effect.Id, dt)); },
-                                    ChaosApi.GlobalConfig["EffectTickInterval"].AsInt(20));
+                                    dt => { HandleEffect(ChaosEffectPacket.CreateTickPacket(effect.Id, dt)); },
+                                    GlobalConfig["EffectTickInterval"].AsInt(20));
                             }, "");
                             break;
 
@@ -175,19 +172,19 @@ namespace Chaos.Mod.Controllers
                         //  - No
                         //      - OnClientTick()            CLIENT TICK
                         //      - Send Tick Packet.         SEND SERVER TICK PACKET
-                        case EffectCommand.Tick when !effect.Running:
+                        case EffectStage.Tick when !effect.Running:
                             return;
-                        case EffectCommand.Tick:
+                        case EffectStage.Tick:
                             var elapsed = (_capi.InWorldEllapsedMilliseconds - effect.StartTick) / 1000;
                             var duration = effect.Duration switch
                             {
                                 EffectDuration.Instant => 0,
-                                EffectDuration.Short => ChaosApi.GlobalConfig["EffectDuration"]["Short"].AsInt(30),
-                                EffectDuration.Standard => ChaosApi.GlobalConfig["EffectDuration"]["Standard"]
+                                EffectDuration.Short => GlobalConfig["EffectDuration"]["Short"].AsInt(30),
+                                EffectDuration.Standard => GlobalConfig["EffectDuration"]["Standard"]
                                     .AsInt(60),
-                                EffectDuration.Long => ChaosApi.GlobalConfig["EffectDuration"]["Long"].AsInt(120),
+                                EffectDuration.Long => GlobalConfig["EffectDuration"]["Long"].AsInt(120),
                                 EffectDuration.Permanent => int.MaxValue,
-                                EffectDuration.Custom => ChaosApi.GlobalConfig["CustomDurations"][effect.Pack][
+                                EffectDuration.Custom => GlobalConfig["CustomDurations"][effect.Pack][
                                     $"{effect.EffectType}"][effect.Id].AsInt(30),
                                 _ => throw new ArgumentOutOfRangeException()
                             };
@@ -197,7 +194,7 @@ namespace Chaos.Mod.Controllers
                                 {
                                     _capi.Event.UnregisterGameTickListener(_listenerId);
                                 });
-                                HandleEffect(HandleEffectPacket.CreateStopPacket(effect.Id));
+                                HandleEffect(ChaosEffectPacket.CreateStopPacket(effect.Id));
                             }
                             else
                             {
@@ -212,21 +209,24 @@ namespace Chaos.Mod.Controllers
                         //  - Send Stop Packet.             SEND SERVER STOP PACKET
                         //  - Running = false;
                         //  - Remove as running effect.
-                        case EffectCommand.Stop when !effect.Running:
+                        case EffectStage.Stop when !effect.Running:
                             return;
-                        case EffectCommand.Stop:
+                        case EffectStage.Stop:
                             effect.OnClientStop();
-                            NetworkEx.Client.SendPacket(HandleEffectPacket.CreateStopPacket(effect.Id));
+                            NetworkEx.Client.SendPacket(packet);
                             effect.Running = false;
                             RunningEffects.Remove(effect.Id);
+                            HandleEffect(ChaosEffectPacket.CreateTakeDownPacket(effect.Id));
                             break;
 
                         // On Client TakeDown
                         //  - OnClientTakeDown()            CLIENT TAKEDOWN
-                        //  - Send Stop Packet.             SEND SERVER TAKEDOWN PACKET
-                        case EffectCommand.TakeDown when effect.Running:
+                        //  - Send TakeDown Packet.         SEND SERVER TAKEDOWN PACKET
+                        case EffectStage.TakeDown when effect.Running:
                             return;
-                        case EffectCommand.TakeDown:
+                        case EffectStage.TakeDown:
+                            effect.OnClientTakeDown(_capi);
+                            NetworkEx.Client.SendPacket(packet);
                             break;
 
                         default:
@@ -243,10 +243,11 @@ namespace Chaos.Mod.Controllers
                         // On Server Setup
                         //  - Set player for effect.
                         //  - OnServerSetup()               SERVER SETUP
-                        case EffectCommand.Setup when effect.Running:
+                        case EffectStage.Setup when effect.Running:
                             return;
-                        case EffectCommand.Setup:
+                        case EffectStage.Setup:
                             effect.Player = _sapi.World.PlayerByUid(packet.PlayerUID);
+                            effect.OnServerSetup(player, _sapi);
                             break;
 
                         // On Server Start
@@ -254,9 +255,9 @@ namespace Chaos.Mod.Controllers
                         //  - OnServerStart()               SERVER START
                         //  - Running = true;
                         //  - Add as running effect.
-                        case EffectCommand.Start when effect.Running:
+                        case EffectStage.Start when effect.Running:
                             return;
-                        case EffectCommand.Start:
+                        case EffectStage.Start:
                             _sapi.SendIngameDiscovery(player, null, effect.Title());
                             _sapi.World.PlaySoundAt(new AssetLocation("sounds/effect/deepbell"), player.Entity, null,
                                 false, 32f, 0.5f);
@@ -268,9 +269,9 @@ namespace Chaos.Mod.Controllers
 
                         // On Server Tick
                         //  - OnServerTick()                SERVER TICK
-                        case EffectCommand.Tick when !effect.Running:
+                        case EffectStage.Tick when !effect.Running:
                             return;
-                        case EffectCommand.Tick:
+                        case EffectStage.Tick:
                             effect.OnServerTick(packet.DeltaTime);
                             break;
 
@@ -278,9 +279,9 @@ namespace Chaos.Mod.Controllers
                         //  - OnServerStop()                SERVER STOP
                         //  - Running = false;
                         //  - Remove as running effect.
-                        case EffectCommand.Stop when !effect.Running:
+                        case EffectStage.Stop when !effect.Running:
                             return;
-                        case EffectCommand.Stop:
+                        case EffectStage.Stop:
                             effect.OnServerStop();
                             effect.Running = false;
                             RunningEffects.Remove(effect.Id);
@@ -288,9 +289,10 @@ namespace Chaos.Mod.Controllers
 
                         // On Server TakeDown
                         //  - OnServerTakeDown()            SERVER TAKEDOWN
-                        case EffectCommand.TakeDown when effect.Running:
+                        case EffectStage.TakeDown when effect.Running:
                             return;
-                        case EffectCommand.TakeDown:
+                        case EffectStage.TakeDown:
+                            effect.OnServerTakeDown(player, _sapi);
                             break;
 
                         default:

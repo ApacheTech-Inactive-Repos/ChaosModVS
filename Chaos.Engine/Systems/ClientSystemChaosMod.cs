@@ -1,5 +1,4 @@
-﻿using Chaos.Engine.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using VintageMods.Core.Threading.Systems;
 using Vintagestory.API.Client;
 using Vintagestory.Client.NoObf;
@@ -7,15 +6,12 @@ using Vintagestory.Client.NoObf;
 namespace Chaos.Engine.Systems
 {
     [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
-    public sealed class ClientSystemChaosMod : ClientSystemAsyncActions, IHasClientAccess
+    public sealed class ClientSystemChaosMod : ClientSystemAsyncActions
     {
         public ClientSystemChaosMod(ClientMain game) : base(game)
         {
             Capi = (ICoreClientAPI) game.Api;
-            Capi.RegisterCommand("chaos", "", "", (_, _) =>
-            {
-                Capi.ShowChatMessage("Client System Loaded.");
-            });
+            Capi.RegisterCommand("chaos", "", "", (_, _) => { Capi.ShowChatMessage("Client System Loaded."); });
         }
 
         public override string Name => "chaos";

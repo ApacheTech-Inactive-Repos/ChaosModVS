@@ -1,6 +1,6 @@
-﻿using Chaos.Engine.Attributes;
-using Chaos.Engine.Enums;
-using Chaos.Engine.Primitives;
+﻿using Chaos.Engine.Effects.Attributes;
+using Chaos.Engine.Effects.Enums;
+using Chaos.Engine.Effects.Primitives;
 using Vintagestory.API.Client;
 using Vintagestory.Client.NoObf;
 

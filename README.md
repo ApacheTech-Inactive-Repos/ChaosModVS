@@ -31,8 +31,9 @@ The mod comes packaged with a Discord Bot, that when installed, will integrate y
 ### Acknowledgements
 
  * **[pongo1231](https://www.gta5-mods.com/users/pongo1231)** - Author of ChaosMod for GTA5.
- * **Novocain** - ClientSystem injection methods, and other vital components.
- * **Capsup** - File System IO base implementation, and help with third-party tools.
+ * **Novocain** - ClientSystem injection methods, and other vital reflection-based components.
+ * **Capsup** - Help with third-party tools, IL stitching, and dev environment optimisation.
+ * **Xandu** - XSkills was a primer into how to write shaders in this game. Thank you.
 
 ## Effect Types
 
@@ -106,6 +107,7 @@ The mod comes packaged with a Discord Bot, that when installed, will integrate y
  - Set Spawn Point at Current Location
  - Suicide
  - IDDQD
+ - IDKFA
  - Well Fed
  - Starving!
  - BOOM! Headshot!
@@ -127,11 +129,15 @@ The mod comes packaged with a Discord Bot, that when installed, will integrate y
 
 #### + Shader Effects
 
- - Night Vision
- - Extreme Fog
- - Pitch Black
- - Green Flames!
+ - Acid Trip
+ - Alien World
+ - Antique Story
+ - Blind
+ - Blue Light District
+ - Cats Eyes
  - Deep Fried
+ - Night Vision
+ - Seeing Red
  - VS Noire
 
 #### + Time Effects
@@ -147,9 +153,13 @@ The mod comes packaged with a Discord Bot, that when installed, will integrate y
  - Here Comes the Summer Sun
  - Spring Break
  - Autumn Leaves
+ - Extreme Fog
+ - Monsoon Season
 
 #### + Misc. Effects
 
- - Doomsday
- - 0.2x Game Speed
+ - Nothing
  - Play Random Echo Chamber Song
+ - Quake Pro FOV
+ - Is This What Australia Looks Like?
+ - Zoom Zoom Cam
