@@ -10,8 +10,6 @@ This makes gameplay significantly more surprising, as literally anything could h
 
 The mod also comes with a simple configuration tool. You can do anything from changing how often an effect should start to toggling individual effects and changing all kind of settings individually for any effect.
 
-Also this mod is open source. Feel free to do whatever you want with it as long as it doesn't violate the license in any way and you credit me accordingly.
-
 **Please note: Some mods can conflict with some effects! If you are experiencing any problems try disabling all other mods before reporting them back!**
 
 ### Twitch / YouTube Integration
@@ -27,13 +25,6 @@ Also included with the mod is a branding pack, which includes Vintage Story emot
 ### Discord Integration
 
 The mod comes packaged with a Discord Bot, that when installed, will integrate your Vintage Story gameworld with your Discord server. Notify Discord channels about player deaths, in-game chat messages, temporal storms, and more. Discord users can also send commands to game, to trigger effects. This works in much the same way as the Twitch, and YouTube Bots.
-
-### Acknowledgements
-
- * **[pongo1231](https://www.gta5-mods.com/users/pongo1231)** - Author of ChaosMod for GTA5.
- * **Novocain** - ClientSystem injection methods, and other vital reflection-based components.
- * **Capsup** - Help with third-party tools, IL stitching, and dev environment optimisation.
- * **Xandu** - XSkills was a primer into how to write shaders in this game. Thank you.
 
 ## Effect Types
 

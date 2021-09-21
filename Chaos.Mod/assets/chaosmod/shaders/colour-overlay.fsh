@@ -5,6 +5,12 @@
  * to implement shaders into Vintage Story mods. Full credit
  * goes to them, and their XSkills mod, for the single colour
  * overlay filters included within this fragment shader.
+ * 
+ * XSkills Mod, by Xandu:
+ * https://mods.vintagestory.at/show/mod/247
+ *
+ * Initial animated Rainbow shader by CryCry, for VCRMods:
+ * https://vrcmods.com/item/431-Script---Animated-Rainbow-Shader
  **/
 
 // Overly Type Enum Definitions

@@ -17,8 +17,9 @@
   "Creature.AllNearbyDriftersDance.Description": "Groovy, baby!",
 
   "Creature.ObliterateAllNearbyAnimals.Title": "Obliterate All Nearby Animals",
-  "Creature.ReviveAllNearbyCorpses.Title": "Revive All Nearby Corpses",
+  "Creature.ObliterateAllNearbyAnimals.Description": "All creatures within range of the player, explode.",
 
+  "Creature.ReviveAllNearbyCorpses.Title": "Revive All Nearby Corpses",
   "Creature.ReviveAllNearbyCorpses.Description": "Any corpses within range of the player are revived, with full health. Ready for Round 2?",
 
   "Creature.YeetAllNearbyCreatures.Title": "Yeet All Nearby Creatures",

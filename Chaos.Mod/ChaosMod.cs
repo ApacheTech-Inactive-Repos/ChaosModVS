@@ -58,7 +58,6 @@ namespace Chaos.Mod
             return true;
         }
 
-
         // Perform actions on Server.
         public override void StartServerSide(ICoreServerAPI sapi)
         {
