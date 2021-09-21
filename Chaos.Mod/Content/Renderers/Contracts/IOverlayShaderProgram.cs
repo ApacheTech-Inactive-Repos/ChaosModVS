@@ -13,6 +13,5 @@ namespace Chaos.Mod.Content.Renderers.Contracts
         float Speed { get; set; }
         float Spread { get; set; }
 
-        void UpdateTexture();
     }
 }

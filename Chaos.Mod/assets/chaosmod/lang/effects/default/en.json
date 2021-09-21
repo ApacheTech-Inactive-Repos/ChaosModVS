@@ -1,47 +1,132 @@
 {
-  "Effects.Default.Creature.ObliterateAllNearbyAnimals.Title": "Obliterate All Nearby Animals",
-  "Effects.Default.Creature.ObliterateAllNearbyAnimals.Description":
-    "All animals within range of the player explode in a fiery ball of death.",
+  // =========================================================
+  //  Block Effects 
+  // =========================================================
 
-  "Effects.Default.Misc.QuakeProFOV.Title": "Quake Pro FOV",
-  "Effects.Default.Misc.QuakeProFOV.Description": "Increases the Field of View to eye-watering levels.",
+  "Block.PLACEHOLDER.Title": "",
+  "Block.PLACEHOLDER.Description": "",
 
-  "Effects.Default.Misc.ZoomZoomCam.Title": "Zoom Zoom Cam",
-  "Effects.Default.Misc.ZoomZoomCam.Description": "Makes the camera zoom in and out, continuously.",
+  // =========================================================
+  //  Creature Effects 
+  // =========================================================
 
-  "Effects.Default.Meta.NoChaos.Title": "No Chaos",
-  "Effects.Default.Meta.NoChaos.Description": "Disables all other effects, while No Chaos is active.",
+  "Creature.PLACEHOLDER.Title": "",
+  "Creature.PLACEHOLDER.Description": "",
 
-  "Effects.Default.Misc.WhatAustraliaLooksLike.Title": "Is This What Australia Looks Like?",
-  "Effects.Default.Misc.WhatAustraliaLooksLike.Description": "Turns the camera upside down.",
+  "Creature.AllNearbyDriftersDance.Title": "All Nearby Drifters Dance",
+  "Creature.AllNearbyDriftersDance.Description": "Groovy, baby!",
 
-  "Effects.Default.Player.Player.Title": "#Yeet",
-  "Effects.Default.Player.Player.Description": "Launch the player into the stratosphere.",
+  "Creature.ObliterateAllNearbyAnimals.Title": "Obliterate All Nearby Animals",
+  "Creature.ReviveAllNearbyCorpses.Title": "Revive All Nearby Corpses",
 
-  "Effects.Default.Creature.YeetAllNearbyCreatures.Title": "Yeet All Nearby Creatures",
-  "Effects.Default.Creature.YeetAllNearbyCreatures.Description": "Launch all animals within range, into space.",
+  "Creature.ReviveAllNearbyCorpses.Description": "Any corpses within range of the player are revived, with full health. Ready for Round 2?",
 
-  "Effects.Default.Creature.AllNearbyDriftersDance.Title": "All Nearby Drifters Dance",
-  "Effects.Default.Creature.AllNearbyDriftersDance.Description": "Groovy, baby!",
+  "Creature.YeetAllNearbyCreatures.Title": "Yeet All Nearby Creatures",
+  "Creature.YeetAllNearbyCreatures.Description": "Launch all animals within range, into space.",
 
-  "Effects.Default.Creature.ReviveAllNearbyCorpses.Title": "Revive All Nearby Corpses",
-  "Effects.Default.Creature.ReviveAllNearbyCorpses.Description":
-    "Any corpses within range of the player are revived, with full health. Ready for Round 2?",
+  // =========================================================
+  //  Item Effects 
+  // =========================================================
 
-  "Effects.Default.Player.Yeet.Title": "#yeet",
-  "Effects.Default.Player.Yeet.Description": "Launch the player into space.",
+  "Item.PLACEHOLDER.Title": "",
+  "Item.PLACEHOLDER.Description": "",
 
-  "Effects.Default.Shader.AcidTrip.Title": "Acid Trip",
-  "Effects.Default.Shader.AcidTrip.Description":
-    "\"Life is only a dream, and we are the imaginations of ourselves!\" - Bill Hicks.",
+  // =========================================================
+  //  Meta Effects 
+  // =========================================================
 
-  "Effects.Default.Shader.CatsEyes.Title": "Cats Eyes",
-  "Effects.Default.Shader.CatsEyes.Description": "Gives the player sepia vision in the dark.",
+  "Meta.PLACEHOLDER.Title": "",
+  "Meta.PLACEHOLDER.Description": "",
 
-  "Effects.Default.Shader.NightVision.Title": "Night Vision",
-  "Effects.Default.Shader.NightVision.Description":
-    "Gives the player Night Vision, as if wearing Night Vision goggles.",
+  "Meta.NoChaos.Title": "No Chaos",
+  "Meta.NoChaos.Description": "Disables all other effects, while No Chaos is active.",
 
-  "Effects.Default.Shader.DeepFried.Title": "Deep Fried",
-  "Effects.Default.Shader.DeepFried.Description": "Who turned on the lights?"
+  // =========================================================
+  //  Misc. Effects 
+  // =========================================================
+
+  "Misc.PLACEHOLDER.Title": "",
+  "Misc.PLACEHOLDER.Description": "",
+
+  "Misc.Nothing.Title": "Nothing",
+  "Misc.Nothing.Description": "Does exactly what it says on the tin.",
+
+  "Misc.QuakeProFOV.Title": "Quake Pro FOV",
+  "Misc.QuakeProFOV.Description": "Increases the Field of View to eye-watering levels.",
+
+  "Misc.WhatAustraliaLooksLike.Title": "Is This What Australia Looks Like?",
+  "Misc.WhatAustraliaLooksLike.Description": "Turns the world upside down.",
+
+  "Misc.ZoomZoomCam.Title": "Zoom Zoom Cam",
+  "Misc.ZoomZoomCam.Description": "Makes the camera zoom in and out, continuously.",
+
+  // =========================================================
+  //  Player Effects 
+  // =========================================================
+
+  "Player.PLACEHOLDER.Title": "",
+  "Player.PLACEHOLDER.Description": "",
+
+  "Player.Forcefield.Title": "Forcefield",
+  "Player.Forcefield.Description": "Repel entities away from the player",
+
+  "Player.HealToFull.Title": "Heal To Full",
+  "Player.HealToFull.Description": "Gives the player full health, and full hunger meters",
+
+  "Player.ThermonuclearHandGrenade.Title": "Thermonuclear Hand Grenade",
+  "Player.ThermonuclearHandGrenade.Description": "100 block blast radius, but you can only throw it 5 blocks away from you",
+
+  "Player.Yeet.Title": "#Yeet",
+  "Player.Yeet.Description": "Launch the player into the stratosphere.",
+
+  // =========================================================
+  //  Shader Effects 
+  // =========================================================
+
+  "Shader.PLACEHOLDER.Title": "",
+  "Shader.PLACEHOLDER.Description": "",
+
+  "Shader.AcidTrip.Title": "Acid Trip",
+  "Shader.AcidTrip.Description": "\"Life is only a dream, and we are the imaginations of ourselves!\" - Bill Hicks.",
+
+  "Shader.AlienWorld.Title": "Alien World",
+  "Shader.AlienWorld.Description": "Randomised shader effects, to make the world seem alien, and strange",
+
+  "Shader.AntiqueStory.Title": "Antique Story",
+  "Shader.AntiqueStory.Description": "Like looking at an old photograph.",
+
+  "Shader.BlueLightDistrict.Title": "Blue Light District",
+  "Shader.BlueLightDistrict.Description": "Turns the air blue.",
+
+  "Shader.CatsEyes.Title": "Cats Eyes",
+  "Shader.CatsEyes.Description": "Gives the player sepia vision in the dark.",
+
+  "Shader.DeepFried.Title": "Deep Fried",
+  "Shader.DeepFried.Description": "Who turned on the lights?",
+
+  "Shader.NightVision.Title": "Night Vision",
+  "Shader.NightVision.Description": "Gives the player Night Vision, as if wearing Night Vision goggles.",
+
+  "Shader.SeeingRed.Title": "Seeing Red",
+  "Shader.SeeingRed.Description": "No, your retinas aren't bleeding, it's just a shader effect.",
+
+  "Shader.VSNoire.Title": "VS Noire",
+  "Shader.VSNoire.Description": "Plays some smooth jazz in the background, while you walk around a greyscale world.",
+
+  // =========================================================
+  //  Time Effects 
+  // =========================================================
+
+  "Time.PLACEHOLDER.Title": "",
+  "Time.PLACEHOLDER.Description": "",
+
+  // =========================================================
+  //  Weather Effects 
+  // =========================================================
+
+  "Weather.PLACEHOLDER.Title": "",
+  "Weather.PLACEHOLDER.Description": "",
+
+  "Weather.StartTemporalStorm.Title": "Trigger Temporal Storm",
+  "Weather.StartTemporalStorm.Description": "Immediately trigger a temporal storm."
 }

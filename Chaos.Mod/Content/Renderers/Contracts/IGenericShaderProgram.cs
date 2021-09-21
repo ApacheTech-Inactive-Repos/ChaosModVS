@@ -6,7 +6,6 @@ namespace Chaos.Mod.Content.Renderers.Contracts
     public interface IGenericShaderProgram : IShaderProgram
     {
         string Name { get; set; }
-
-        Action SetAdditionalUniforms { get; set; }
+        void UpdateUniforms();
     }
 }

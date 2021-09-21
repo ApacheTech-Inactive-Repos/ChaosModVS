@@ -2,7 +2,7 @@
 
 namespace Chaos.Mod.Content.Renderers.Contracts
 {
-    public interface IGenericRenderer<TShaderProgram> : IRenderer where TShaderProgram : IGenericShaderProgram, new()
+    public interface IGenericRenderer<TShaderProgram> : IRenderer where TShaderProgram : IGenericShaderProgram
     {
         TShaderProgram Shader { get; set; }
 

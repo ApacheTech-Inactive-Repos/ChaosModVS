@@ -8,7 +8,6 @@ namespace Chaos.Mod.Content.Renderers.Contracts
     public interface IOverlayRenderer : IGenericRenderer<OverlayShaderProgram>
     {
         bool LightReactive { get; set; }
-        bool Active { get; set; }
         EnumBlendMode BlendMode { get; set; }
         float BrightnessMultiplier { get; set; }
     }

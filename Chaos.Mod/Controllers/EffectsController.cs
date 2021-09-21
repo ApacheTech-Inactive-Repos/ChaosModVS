@@ -5,8 +5,8 @@ using Chaos.Engine.Effects.Contracts;
 using Chaos.Engine.Effects.Enums;
 using Chaos.Engine.Effects.Extensions;
 using Chaos.Engine.Effects.Primitives;
-using Chaos.Engine.Extensions;
 using Chaos.Engine.Network.Messages;
+using VintageMods.Core.Extensions;
 using VintageMods.Core.Helpers;
 using VintageMods.Core.IO.Extensions;
 using Vintagestory.API.Client;
@@ -30,7 +30,7 @@ namespace Chaos.Mod.Controllers
             foreach (var effect in Effects) effect.GlobalConfig = GlobalConfig;
         }
 
-        public JsonObject GlobalConfig { get; } = ApiEx.Universal.GetModFile("global-config.json").AsRawJsonObject();
+        private JsonObject GlobalConfig { get; } = ApiEx.Universal.GetModFile("global-config.json").AsRawJsonObject();
 
         private IEnumerable<IChaosEffect> Effects { get; }
 
@@ -73,7 +73,12 @@ namespace Chaos.Mod.Controllers
             //  - Send Start Packet.            SEND SERVER START PACKET
             //  - Running = true;
             //  - Add as running effect.
-            //  - If Effect is not Instant, Set Tick Timer
+            //  - Is Effect Instant?
+            //  - Yes
+            //      - OnClientTakeDown()        CLIENT TAKEDOWN
+            //      - Send TakeDown Packet.     SEND SERVER TAKEDOWN PACKET
+            //  - No
+            //      - Set Tick Timer
 
             // On Client Tick
             //  - Has time elapsed?
@@ -146,14 +151,24 @@ namespace Chaos.Mod.Controllers
                         //  - Send Start Packet.            SEND SERVER START PACKET
                         //  - Running = true;
                         //  - Add as running effect.
-                        //  - If Effect is not Instant, Set Tick Timer
+                        //  - Is Effect Instant?
+                        //  - Yes
+                        //      - OnClientTakeDown()        CLIENT TAKEDOWN
+                        //      - Send TakeDown Packet.     SEND SERVER TAKEDOWN PACKET
+                        //  - No
+                        //      - Set Tick Timer
                         case EffectStage.Start when effect.Running:
                             return;
                         case EffectStage.Start:
                             effect.StartTick = _capi.InWorldEllapsedMilliseconds;
                             effect.OnClientStart(_capi);
                             NetworkEx.Client.SendPacket(packet);
-                            if (effect.Duration is EffectDuration.Instant) return;
+                            if (effect.Duration is EffectDuration.Instant)
+                            {
+                                effect.OnClientTakeDown(_capi);
+                                NetworkEx.Client.SendPacket(ChaosEffectPacket.CreateTakeDownPacket(effect.Id));
+                                return;
+                            }
                             effect.Running = true;
                             RunningEffects.Add(effect.Id, effect);
                             _capi.Event.EnqueueMainThreadTask(() =>
@@ -259,8 +274,7 @@ namespace Chaos.Mod.Controllers
                             return;
                         case EffectStage.Start:
                             _sapi.SendIngameDiscovery(player, null, effect.Title());
-                            _sapi.World.PlaySoundAt(new AssetLocation("sounds/effect/deepbell"), player.Entity, null,
-                                false, 32f, 0.5f);
+                            _sapi.World.PlaySoundAt(new AssetLocation("sounds/effect/deepbell"), player.Entity, null, false, 32f, 0.5f);
                             effect.OnServerStart(player, _sapi);
                             if (effect.Duration is EffectDuration.Instant) return;
                             effect.Running = true;
@@ -293,6 +307,8 @@ namespace Chaos.Mod.Controllers
                             return;
                         case EffectStage.TakeDown:
                             effect.OnServerTakeDown(player, _sapi);
+                            _sapi.World.PlaySoundAt(new AssetLocation("sounds/effect/deepbell"), player.Entity, null, false, 32f, 0.5f);
+                            player.SendMessage("Effect Ended.");
                             break;
 
                         default:

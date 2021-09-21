@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Chaos.Engine.Systems;
 using Chaos.Mod.Content.Renderers;
 using Chaos.Mod.Content.Renderers.Enums;
@@ -155,7 +156,7 @@ namespace Chaos.Mod
                     }
                 }
             };
-            Effects.StartExecuteClient("AcidTrip");
+            Effects.StartExecuteClient("Yeet");
             return true;
         }
 
@@ -216,7 +217,8 @@ namespace Chaos.Mod
                 }
 
                 var current = (int) _prog.Filter;
-                _prog.Filter = (OverlayColourFilter) GameMath.Clamp(current + 1, 0, 6);
+                _prog.Filter = (OverlayColourFilter) GameMath.Clamp(current + 1, 0, 
+                    Enum.GetNames(typeof(OverlayColourFilter)).Length -1);
                 Capi.ShowChatMessage($"Filter: {_prog.Filter}");
                 return true;
             });
@@ -231,7 +233,8 @@ namespace Chaos.Mod
                 }
 
                 var current = (int) _prog.Filter;
-                _prog.Filter = (OverlayColourFilter) GameMath.Clamp(current - 1, 0, 6);
+                _prog.Filter = (OverlayColourFilter) GameMath.Clamp(current - 1, 0, 
+                    Enum.GetNames(typeof(OverlayColourFilter)).Length -1);
                 Capi.ShowChatMessage($"Filter: {_prog.Filter}");
 
                 return true;

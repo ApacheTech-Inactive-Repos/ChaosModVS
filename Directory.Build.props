@@ -1,5 +1,42 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+	<!--
+
+    Prior to MSBuild version 15, if you wanted to provide a new, custom property to projects
+	in your solution, you had to manually add a reference to that property to every project
+	file in the solution. Or, you had to define the property in a .props file and then 
+	explicitly import the .props file in every project in the solution, among other things.
+
+    However, now you can add a new property to every project in one step by defining it in a
+	single file called Directory.Build.props in the root folder that contains your source.
+	
+	Directory.Build.props is imported very early in Microsoft.Common.props, and properties
+	defined later are unavailable to it. So, avoid referring to properties that are not yet
+	defined (and will evaluate to empty).
+
+	Properties that are set in Directory.Build.props can be overridden elsewhere in the project
+	file or in imported files, so you should think of the settings in Directory.Build.props as
+	specifying the defaults for your projects.
+
+	-->
+
+	<!--============================================================================-->
+	<!-- Universal .NET Standard Additions -->
+	<!--============================================================================-->
+
+	<PropertyGroup>
+		<!-- Use C# 9 -->
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+
+	<ItemGroup Condition="$(MSBuildProjectName.IndexOf('Chaos.Tools.GameLauncher')) != 0">
+		<!-- Allows some C# 9 support with .NET Core 3.1 https://github.com/manuelroemer/IsExternalInit -->
+		<PackageReference Include="IsExternalInit" Version="1.0.1">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
+
 	<!--============================================================================-->
 	<!-- DEBUG - Mod Folder Output -->
 	<!--============================================================================-->
@@ -16,88 +53,4 @@
 		<OutDir>$(OutputPath)</OutDir>
 		<RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
 	</PropertyGroup>
-
-	<!--============================================================================-->
-	<!-- Pre Build Tasks -->
-	<!--============================================================================-->
-
-	<Target Name="PreBuild" AfterTargets="PreBuildEvent">
-		<Exec Command="del /s /f /q &quot;$(TargetDir)*&quot; &gt;nul 2&gt;&amp;1" />
-	</Target>
-
-	<Target Name="PreBuildTools" AfterTargets="PreBuild">
-		<Exec
-			Command="IF $(ProjectName.IndexOf(&quot;VintageMods.Tools&quot;)) == -1 (for /f %%f in ('dir /ad /b &quot;$(TargetDir)&quot;') do rd /s /q &quot;$(TargetDir)%%f&quot;)" />
-	</Target>
-
-	<!--============================================================================-->
-	<!-- RELEASE - Post Build Tasks -->
-	<!--============================================================================-->
-
-	<!-- Run Smart Assembly for all Mod projects. -->
-
-	<Target Name="PostBuild_SmartAssembly" AfterTargets="PostBuildEvent"
-	        Condition="$(MSBuildProjectName.IndexOf('Chaos.Mod')) == 0 AND $(ConfigurationName) == Release">
-		<Exec
-			Command="&quot;C:\Program Files\Red Gate\SmartAssembly 8\SmartAssembly.com&quot; $(ProjectDir)SA_$(ConfigurationName).saproj" />
-	</Target>
-
-	<!-- Delete zip files from output and .releases folders. -->
-
-	<Target Name="PostBuild_DeleteZipFiles" AfterTargets="PostBuild_SmartAssembly"
-	        Condition="$(MSBuildProjectName.IndexOf('Chaos.Mod')) == 0 AND $(ConfigurationName) == Release">
-		<Exec
-			Command="del &quot;$(TargetDir)*.zip&quot;&gt;nul 2&gt;&amp;1&#xD;&#xA;
-                   del &quot;$(SolutionDir).releases\$(ProjectName)*.zip&quot;&gt;nul 2&gt;&amp;1" />
-	</Target>
-
-	<!-- Clean up Target Directory -->
-
-	<Target Name="PostBuild_CleanTargetDirectory" AfterTargets="PostBuild_DeleteZipFiles"
-	        Condition="$(MSBuildProjectName.IndexOf('Chaos.Mod')) == 0 AND $(ConfigurationName) == Release">
-		<Exec
-			Command="del &quot;$(TargetDir)src\*.json&quot; &gt;nul 2&gt;&amp;1&#xD;&#xA;
-                   del &quot;$(TargetDir)src\*.pdb&quot; &gt;nul 2&gt;&amp;1" />
-	</Target>
-
-	<Target Name="PostBuild_CleanTargetDirectory" AfterTargets="PostBuild_DeleteZipFiles"
-	        Condition="$(ConfigurationName) == Release">
-		<Exec
-			Command="del &quot;$(TargetDir)*deps.json&quot; &gt;nul 2&gt;&amp;1&#xD;&#xA;
-                   del &quot;$(TargetDir)*.pdb&quot; &gt;nul 2&gt;&amp;1" />
-	</Target>
-
-	<!-- Copy necessary files to src directory -->
-
-	<Target Name="PostBuild_CopyToSrc" AfterTargets="PostBuild_CleanTargetDirectory"
-	        Condition="$(MSBuildProjectName.IndexOf('Chaos.Mod')) == 0 AND $(ConfigurationName) == Release">
-		<Exec
-			Command="xcopy &quot;$(TargetDir)assets\&quot; &quot;$(TargetDir)src\assets\&quot; /y /e /s &gt;nul 2&gt;&amp;1&#xD;&#xA;
-                   copy /y &quot;$(TargetDir)modinfo.json&quot; &quot;$(TargetDir)src&quot; &gt;nul 2&gt;&amp;1&#xD;&#xA;
-                   copy /y &quot;$(SolutionDir)LICENCE.md&quot; &quot;$(TargetDir)src&quot; &gt;nul 2&gt;&amp;1" />
-	</Target>
-
-	<!-- Package Mod -->
-
-	<Target Name="PostBuild_PackageMod" AfterTargets="PostBuild_CopyToSrc"
-	        Condition="$(MSBuildProjectName.IndexOf('Chaos.Mod')) == 0 AND $(ConfigurationName) == Release">
-		<Exec Command="&quot;$(SolutionDir)packager.exe&quot; $(ProjectName) $(TargetDir) src" />
-	</Target>
-
-	<!-- Copy Packaged Mod to releases folder. -->
-
-	<Target Name="PostBuild_CopyToReleases" AfterTargets="PostBuild_PackageMod"
-	        Condition="$(MSBuildProjectName.IndexOf('Chaos.Mod')) == 0 AND $(ConfigurationName) == Release">
-		<Exec Command="copy /y &quot;$(TargetDir)*.zip&quot; &quot;$(SolutionDir).releases&quot; &gt;nul 2&gt;&amp;1" />
-	</Target>
-
-	<!--============================================================================-->
-	<!-- Clean Tasks -->
-	<!--============================================================================-->
-
-	<Target Name="PostClean" AfterTargets="AfterClean">
-		<RemoveDir Directories="$(OutputPath)" />
-		<RemoveDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)" />
-		<Exec Command="del /s &quot;$(SolutionDir).releases\$(ProjectName)*.zip&quot; &gt;nul 2&gt;&amp;1" />
-	</Target>
 </Project>

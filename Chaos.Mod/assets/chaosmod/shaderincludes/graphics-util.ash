@@ -1,7 +1,4 @@
-﻿// Put this in a folder called "Shared" in the same location as all your shader files.
-// Or, put it wherever you want and change the filepath on line 18 of Rainbow.shader.
-
-vec4 RGBtoHSL(vec4 rgb) {
+﻿vec4 RGBtoHSL(vec4 rgb) {
 	vec4 hsl = vec4(0.0, 0.0, 0.0, rgb.w);
 	
 	float vMin = min(min(rgb.x, rgb.y), rgb.z);
@@ -62,4 +59,20 @@ vec4 HSLtoRGB(vec4 hsl) {
 	}
 	
 	return rgb;
+}
+
+vec3 RGBtoHSV(vec3 c)
+{
+    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+
+    float d = q.x - min(q.w, q.y);
+    float e = 1.0e-10;
+    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+}
+
+vec3 RGBtoHSV(float r, float g, float b)
+{
+    return RGBtoHSV(vec3(r, g, b));
 }

@@ -11,6 +11,7 @@ namespace Chaos.Mod.Content.Renderers.Enums
         Blue,
         Greyscale,
         Sepia,
-        Rainbow
+        Rainbow,
+        Trippy
     }
 }

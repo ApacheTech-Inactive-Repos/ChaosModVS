@@ -194,11 +194,11 @@ namespace Chaos.Engine.Effects.Extensions
                         keyValuePair.Value.OnBlockExploded(server, keyValuePair.Key, data.Position, data.BlastType);
                         server.WorldMap.BulkBlockAccess.SetBlock(0, keyValuePair.Key);
                     }
-                    catch (NullReferenceException e)
+                    catch (NullReferenceException)
                     {
                         // ignored
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         // ignored
                     }

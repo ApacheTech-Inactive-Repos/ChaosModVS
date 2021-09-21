@@ -1,0 +1,108 @@
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<!--
+
+    Prior to MSBuild version 15, if you wanted to provide a new, custom target to projects
+	in your solution, you had to manually add a reference to that target to every project
+	file in the solution. Or, you had to define the property in a .targets file and then 
+	explicitly import the .targets file in every project in the solution, among other things.
+
+    However, now you can add a new target to every project in one step by defining it in a
+	single file called Directory.Build.targets in the root folder that contains your source.
+	
+	Directory.Build.targets is imported from Microsoft.Common.targets after importing
+	.targets files from NuGet packages. So, it can override properties and targets defined
+	in most of the build logic, or set properties for all your projects regardless of what
+	the individual projects set.
+
+	When you need to set a property or define a target for an individual project that overrides
+	any prior settings, put that logic in the project file after the final import. In order
+	to do this in an SDK-style project, you first have to replace the SDK-style attribute with
+	the equivalent imports. 
+
+	-->
+
+	<!--============================================================================-->
+	<!-- Pre Build Tasks -->
+	<!--============================================================================-->
+
+	<Target Name="PreBuild" AfterTargets="PreBuildEvent">
+		<Exec Command="del /s /f /q &quot;$(TargetDir)*&quot; &gt;nul 2&gt;&amp;1" />
+	</Target>
+
+	<Target Name="PreBuildTools" AfterTargets="PreBuild">
+		<Exec
+			Command="IF $(ProjectName.IndexOf(&quot;VintageMods.Tools&quot;)) == -1 (for /f %%f in ('dir /ad /b &quot;$(TargetDir)&quot;') do rd /s /q &quot;$(TargetDir)%%f&quot;)" />
+	</Target>
+
+	<!--============================================================================-->
+	<!-- RELEASE - Post Build Tasks -->
+	<!--============================================================================-->
+
+	<!-- Run Smart Assembly for all Mod projects. -->
+
+	<Target Name="PostBuild_SmartAssembly" AfterTargets="PostBuildEvent"
+	        Condition="$(MSBuildProjectName.IndexOf('Chaos.Mod')) == 0 AND $(ConfigurationName) == Release">
+		<Exec
+			Command="&quot;C:\Program Files\Red Gate\SmartAssembly 8\SmartAssembly.com&quot; $(ProjectDir)SA_$(ConfigurationName).saproj" />
+	</Target>
+
+	<!-- Delete zip files from output and .releases folders. -->
+
+	<Target Name="PostBuild_DeleteZipFiles" AfterTargets="PostBuild_SmartAssembly"
+	        Condition="$(MSBuildProjectName.IndexOf('Chaos.Mod')) == 0 AND $(ConfigurationName) == Release">
+		<Exec
+			Command="del &quot;$(TargetDir)*.zip&quot;&gt;nul 2&gt;&amp;1&#xD;&#xA;
+                   del &quot;$(SolutionDir).releases\$(ProjectName)*.zip&quot;&gt;nul 2&gt;&amp;1" />
+	</Target>
+
+	<!-- Clean up Target Directory -->
+
+	<Target Name="PostBuild_CleanTargetDirectory" AfterTargets="PostBuild_DeleteZipFiles"
+	        Condition="$(MSBuildProjectName.IndexOf('Chaos.Mod')) == 0 AND $(ConfigurationName) == Release">
+		<Exec
+			Command="del &quot;$(TargetDir)src\*.json&quot; &gt;nul 2&gt;&amp;1&#xD;&#xA;
+                   del &quot;$(TargetDir)src\*.pdb&quot; &gt;nul 2&gt;&amp;1" />
+	</Target>
+
+	<Target Name="PostBuild_CleanTargetDirectory" AfterTargets="PostBuild_DeleteZipFiles"
+	        Condition="$(ConfigurationName) == Release">
+		<Exec
+			Command="del &quot;$(TargetDir)*deps.json&quot; &gt;nul 2&gt;&amp;1&#xD;&#xA;
+                   del &quot;$(TargetDir)*.pdb&quot; &gt;nul 2&gt;&amp;1" />
+	</Target>
+
+	<!-- Copy necessary files to src directory -->
+
+	<Target Name="PostBuild_CopyToSrc" AfterTargets="PostBuild_CleanTargetDirectory"
+	        Condition="$(MSBuildProjectName.IndexOf('Chaos.Mod')) == 0 AND $(ConfigurationName) == Release">
+		<Exec
+			Command="xcopy &quot;$(TargetDir)assets\&quot; &quot;$(TargetDir)src\assets\&quot; /y /e /s &gt;nul 2&gt;&amp;1&#xD;&#xA;
+                   copy /y &quot;$(TargetDir)modinfo.json&quot; &quot;$(TargetDir)src&quot; &gt;nul 2&gt;&amp;1&#xD;&#xA;
+                   copy /y &quot;$(SolutionDir)LICENCE.md&quot; &quot;$(TargetDir)src&quot; &gt;nul 2&gt;&amp;1" />
+	</Target>
+
+	<!-- Package Mod -->
+
+	<Target Name="PostBuild_PackageMod" AfterTargets="PostBuild_CopyToSrc"
+	        Condition="$(MSBuildProjectName.IndexOf('Chaos.Mod')) == 0 AND $(ConfigurationName) == Release">
+		<Exec Command="&quot;$(SolutionDir)packager.exe&quot; $(ProjectName) $(TargetDir) src" />
+	</Target>
+
+	<!-- Copy Packaged Mod to releases folder. -->
+
+	<Target Name="PostBuild_CopyToReleases" AfterTargets="PostBuild_PackageMod"
+	        Condition="$(MSBuildProjectName.IndexOf('Chaos.Mod')) == 0 AND $(ConfigurationName) == Release">
+		<Exec Command="copy /y &quot;$(TargetDir)*.zip&quot; &quot;$(SolutionDir).releases&quot; &gt;nul 2&gt;&amp;1" />
+	</Target>
+
+	<!--============================================================================-->
+	<!-- Clean Tasks -->
+	<!--============================================================================-->
+
+	<Target Name="PostClean" AfterTargets="AfterClean">
+		<RemoveDir Directories="$(OutputPath)" />
+		<RemoveDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)" />
+		<Exec Command="del /s &quot;$(SolutionDir).releases\$(ProjectName)*.zip&quot; &gt;nul 2&gt;&amp;1" />
+	</Target>
+</Project>

@@ -4,9 +4,11 @@ using Chaos.Mod.Content.Renderers.Contracts;
 using Chaos.Mod.Content.Renderers.Enums;
 using Chaos.Mod.Content.Renderers.Shaders;
 using JetBrains.Annotations;
+using VintageMods.Core.Extensions;
 using VintageMods.Core.Helpers;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.MathTools;
 
 namespace Chaos.Mod.Content.Renderers
 {
@@ -16,8 +18,7 @@ namespace Chaos.Mod.Content.Renderers
         private readonly ICoreClientAPI _capi;
 
         private readonly MeshRef _quadRef;
-
-        private Random _rand;
+        
 
         public OverlayRenderer()
         {
@@ -26,7 +27,6 @@ namespace Chaos.Mod.Content.Renderers
             var customQuadModelData = QuadMeshUtil.GetCustomQuadModelData(-1f, -1f, 0f, 2f, 2f);
             customQuadModelData.Rgba = null;
             _quadRef = _capi.Render.UploadMesh(customQuadModelData);
-            _rand = new Random();
         }
 
         public EnumBlendMode BlendMode { get; set; } = EnumBlendMode.Overlay;
@@ -68,23 +68,7 @@ namespace Chaos.Mod.Content.Renderers
                 Shader.Use();
                 _capi.Render.GlToggleBlend(true, BlendMode);
                 _capi.Render.GLDisableDepthTest();
-                Shader.UpdateTexture();
-
-                Shader.Uniform("dt", _capi.InWorldEllapsedMilliseconds / 1000f);
-                Shader.Uniform("distort", Shader.Filter == OverlayColourFilter.Rainbow ? 1 : 0);
-                Shader.Uniform("rand", (float) _rand.NextDouble());
-
-                Shader.Uniform("saturation", Shader.Saturation);
-                Shader.Uniform("luminosity", Shader.Luminosity);
-                Shader.Uniform("spread", Shader.Spread);
-                Shader.Uniform("speed", Shader.Speed);
-
-                Shader.Uniform("intensity", Shader.Intensity);
-                Shader.Uniform("brightness", Shader.Brightness);
-                Shader.Uniform("compress", Shader.Compress ? 1 : 0);
-                Shader.Uniform("filter", (int) Shader.Filter);
-
-                Shader.SetAdditionalUniforms();
+                Shader.UpdateUniforms();
                 _capi.Render.RenderMesh(_quadRef);
                 Shader.Stop();
             }

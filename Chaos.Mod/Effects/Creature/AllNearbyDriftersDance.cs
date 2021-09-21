@@ -62,8 +62,8 @@ namespace Chaos.Mod.Effects.Creature
         {
             drifter.Controls.StopAllMovement();
             var ai = drifter.GetBehavior<EntityBehaviorTaskAI>().taskManager;
-            var tasks = ai.GetField<List<IAiTask>>("Tasks").Clone();
-            _tempTasks.Add(drifter, tasks.Clone());
+            var tasks = ai.GetField<List<IAiTask>>("Tasks").DeepClone();
+            _tempTasks.Add(drifter, tasks.DeepClone());
             foreach (var aiTask in tasks
                 .Where(aiTask => aiTask is not null)
                 .Where(aiTask => aiTask.GetType() != typeof(AiTaskDance)))

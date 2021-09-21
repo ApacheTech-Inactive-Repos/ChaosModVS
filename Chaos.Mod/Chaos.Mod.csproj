@@ -23,11 +23,13 @@
 		<None Remove="assets\chaosmod\patches\survival-shapes-entity-land-drifter-spiked1.json" />
 		<None Remove="assets\chaosmod\patches\survival-shapes-entity-land-drifter-spiked2.json" />
 		<None Remove="assets\chaosmod\patches\survival-shapes-entity-land-drifter-surface.json" />
-		<None Remove="assets\chaosmod\shaderincludes\colour-util.ash" />
+		<None Remove="assets\chaosmod\shaderincludes\effects-util.ash" />
+		<None Remove="assets\chaosmod\shaderincludes\graphics-util.ash" />
 		<None Remove="assets\chaosmod\shaderincludes\maths-util.ash" />
 		<None Remove="assets\chaosmod\shaders\colour-overlay.fsh" />
 		<None Remove="assets\chaosmod\shaders\colour-overlay.vsh" />
 		<None Remove="assets\chaosmod\sounds\effects\obliterate.ogg" />
+		<None Remove="assets\chaosmod\sounds\effects\vsnoire.ogg" />
 		<None Remove="modinfo.json" />
 	</ItemGroup>
 
@@ -53,16 +55,22 @@
 		<Content Include="assets\chaosmod\patches\survival-shapes-entity-land-drifter-surface.json">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
+		<Content Include="assets\chaosmod\shaderincludes\effects-util.ash">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
 		<Content Include="assets\chaosmod\shaderincludes\maths-util.ash">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-		<Content Include="assets\chaosmod\shaderincludes\colour-util.ash">
+		<Content Include="assets\chaosmod\shaderincludes\graphics-util.ash">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 		<Content Include="assets\chaosmod\shaders\colour-overlay.fsh">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 		<Content Include="assets\chaosmod\shaders\colour-overlay.vsh">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="assets\chaosmod\sounds\music\vsnoire.ogg">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 		<Content Include="modinfo.json">
@@ -149,7 +157,6 @@
 	<ItemGroup>
 	  <Folder Include="Effects\Block\" />
 	  <Folder Include="Effects\Item\" />
-	  <Folder Include="Effects\Meta\" />
 	  <Folder Include="Effects\Time\" />
 	</ItemGroup>
 

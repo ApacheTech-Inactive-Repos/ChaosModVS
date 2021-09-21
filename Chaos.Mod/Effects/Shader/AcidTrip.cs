@@ -1,5 +1,4 @@
-﻿using System;
-using Chaos.Engine.Effects.Enums;
+﻿using Chaos.Engine.Effects.Enums;
 using Chaos.Mod.Content.Renderers;
 using Chaos.Mod.Content.Renderers.Enums;
 using Chaos.Mod.Content.Renderers.Primitives;
@@ -13,8 +12,6 @@ namespace Chaos.Mod.Effects.Shader
     public sealed class AcidTrip : ChaosOverlayEffect
     {
         private int _currentFOV;
-        private bool _isIncreasing;
-        private Random _rand;
         private int _startFOV;
 
         public override EffectType EffectType => EffectType.Shader;
@@ -33,7 +30,7 @@ namespace Chaos.Mod.Effects.Shader
             shader.Filter = OverlayColourFilter.Rainbow;
             shader.Saturation = 0.3f;
             shader.Luminosity = 0.2f;
-            shader.Intensity = 2f;
+            shader.Intensity = 2f;  
             shader.Brightness = 0f;
             shader.Speed = 0.5f;
             shader.Spread = 4f;
@@ -42,15 +39,14 @@ namespace Chaos.Mod.Effects.Shader
         public override void OnClientSetup(ICoreClientAPI capi)
         {
             _currentFOV = _startFOV = ClientSettings.FieldOfView;
-            _rand = new Random();
         }
 
         public override void OnClientTick(float dt)
         {
-            if (Settings["GlitchEnabled"].AsBool(true))
+            if (Settings["GlitchEnabled"].AsBool())
                 ApiEx.Client.Render.ShaderUniforms.GlitchStrength = Settings["GlitchStrength"].AsFloat(1.5f);
 
-            if (Settings["DynamicFOVEnabled"].AsBool(true))
+            if (Settings["DynamicFOVEnabled"].AsBool())
                 ClientSettings.FieldOfView = ++_currentFOV;
         }
 
