@@ -53,6 +53,12 @@ namespace Chaos.Engine.Effects.Primitives
 
         #endregion
 
+        public void SetPlayer(IPlayer player)
+        {
+            // TODO: It may be better to pass in the player UID, and populate the Player from that.
+            Player = player;
+        }
+
         #region Private Methods
 
         private void LoadSettings()
@@ -71,7 +77,7 @@ namespace Chaos.Engine.Effects.Primitives
         ///     Gets the player object.
         /// </summary>
         /// <value>The player.</value>
-        public IPlayer Player { get; set; }
+        protected static IPlayer Player { get; private set; }
 
         /// <summary>
         ///     Gets or sets the global settings for the mod.

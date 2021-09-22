@@ -155,7 +155,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Effects\Block\" />
 	  <Folder Include="Effects\Item\" />
 	  <Folder Include="Effects\Time\" />
 	</ItemGroup>

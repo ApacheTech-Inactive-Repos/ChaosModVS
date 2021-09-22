@@ -78,7 +78,7 @@ namespace Chaos.Mod
                 {
                     "Block", new()
                     {
-                        ""
+                        "JesusWalkOnWater",
                     }
                 },
 
@@ -155,7 +155,7 @@ namespace Chaos.Mod
                     }
                 }
             };
-            Effects.StartExecuteClient("Yeet");
+            Effects.StartExecuteClient("JesusWalkOnWater");
             return true;
         }
 

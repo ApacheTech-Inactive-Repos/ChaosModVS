@@ -6,6 +6,9 @@
   "Block.PLACEHOLDER.Title": "",
   "Block.PLACEHOLDER.Description": "",
 
+  "Block.JesusWalkOnWater.Title": "Jesus: Walk On Water",
+  "Block.JesusWalkOnWater.Description": "Allows the player to walk on water.",
+
   // =========================================================
   //  Creature Effects 
   // =========================================================
@@ -70,6 +73,9 @@
 
   "Player.Forcefield.Title": "Forcefield",
   "Player.Forcefield.Description": "Repel entities away from the player",
+
+  "Player.GravityField.Title": "Gravity Field",
+  "Player.GravityField.Description": "Attracts entities towards the player",
 
   "Player.HealToFull.Title": "Heal To Full",
   "Player.HealToFull.Description": "Gives the player full health, and full hunger meters",

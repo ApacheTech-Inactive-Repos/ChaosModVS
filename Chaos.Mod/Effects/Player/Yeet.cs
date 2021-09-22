@@ -1,6 +1,7 @@
 ﻿using Chaos.Engine.Effects.Enums;
 using Chaos.Engine.Effects.Primitives;
 using Vintagestory.API.Client;
+using Vintagestory.GameContent;
 
 namespace Chaos.Mod.Effects.Player
 {
@@ -11,7 +12,6 @@ namespace Chaos.Mod.Effects.Player
 
         public override void OnClientStart(ICoreClientAPI capi)
         {
-            base.OnClientStart(capi);
             capi.World.Player.Entity.Pos.Motion.Y = 2.5;
         }
     }

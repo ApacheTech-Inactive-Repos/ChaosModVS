@@ -14,14 +14,12 @@ namespace Chaos.Mod.Effects.Misc
 
         public override void OnClientStart(ICoreClientAPI capi)
         {
-            base.OnClientStart(capi);
             _prevFOV = ClientSettings.FieldOfView;
             ClientSettings.FieldOfView = Settings["FieldOfView"].AsInt(110);
         }
 
         public override void OnClientStop()
         {
-            base.OnClientStop();
             ClientSettings.FieldOfView = _prevFOV;
         }
     }

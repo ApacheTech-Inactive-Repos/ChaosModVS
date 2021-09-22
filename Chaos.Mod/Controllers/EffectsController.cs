@@ -139,7 +139,7 @@ namespace Chaos.Mod.Controllers
                         case EffectStage.Setup when effect.Running:
                             return;
                         case EffectStage.Setup:
-                            effect.Player = _capi.World.Player;
+                            effect.SetPlayer(_capi.World.Player);
                             effect.OnClientSetup(_capi);
                             NetworkEx.Client.SendPacket(packet);
                             HandleEffect(ChaosEffectPacket.CreateStartPacket(effect.Id));
@@ -261,7 +261,7 @@ namespace Chaos.Mod.Controllers
                         case EffectStage.Setup when effect.Running:
                             return;
                         case EffectStage.Setup:
-                            effect.Player = _sapi.World.PlayerByUid(packet.PlayerUID);
+                            effect.SetPlayer(_sapi.World.PlayerByUid(packet.PlayerUID));
                             effect.OnServerSetup(player, _sapi);
                             break;
 

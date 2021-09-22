@@ -20,6 +20,8 @@ namespace Chaos.Engine.Effects.Contracts
         /// <value><c>true</c> if running; otherwise, <c>false</c>.</value>
         bool Running { get; set; }
 
+        void SetPlayer(IPlayer player);
+
         /// <summary>
         ///     Gets or sets the global settings for the mod.
         /// </summary>
@@ -31,12 +33,6 @@ namespace Chaos.Engine.Effects.Contracts
         /// </summary>
         /// <value>The settings.</value>
         JsonObject Settings { get; set; }
-
-        /// <summary>
-        ///     The player that acts as the target for the effect.
-        /// </summary>
-        /// <value>A side-agnostic interface of the target Player.</value>
-        IPlayer Player { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating which game tick the effect started on.

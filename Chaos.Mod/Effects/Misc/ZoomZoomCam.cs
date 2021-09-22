@@ -26,8 +26,8 @@ namespace Chaos.Mod.Effects.Misc
         {
             base.OnClientTick(dt);
             var fov = _isIncreasing ? ++_currentFOV : --_currentFOV;
-            if (fov >= Settings["MaxFieldOfView"].AsInt(150)) _isIncreasing = false;
-            if (fov <= Settings["MinFieldOfView"].AsInt(30)) _isIncreasing = true;
+            if (fov >= Settings["MaxFieldOfView"].AsInt(170)) _isIncreasing = false;
+            if (fov <= Settings["MinFieldOfView"].AsInt(10)) _isIncreasing = true;
             ClientSettings.FieldOfView = fov;
         }
 
